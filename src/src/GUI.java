@@ -137,8 +137,8 @@ public class GUI extends JFrame {
         editMenu.setMnemonic(KeyEvent.VK_E);
 
         //Create a font JMenuItem
-        JMenuItem fontItem = new JMenuItem("Font", KeyEvent.VK_F);
-        fontItem.setToolTipText("Change font settings");
+        JMenuItem fontItem = new JMenuItem("Font Size", KeyEvent.VK_F);
+        fontItem.setToolTipText("Change Font Size");
         fontItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

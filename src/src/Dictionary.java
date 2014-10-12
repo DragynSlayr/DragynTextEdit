@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
@@ -43,9 +44,11 @@ public class Dictionary {
      */
     private void initializeReader() {
         try {
-            reader = new BufferedReader(new FileReader(new File("dict.txt")));
+            reader = new BufferedReader(new FileReader(new File(getClass().getResource("dict.txt").toURI())));
         } catch (FileNotFoundException ex) {
             System.out.println("Could not find dict.txt");
+        } catch (URISyntaxException urise) {
+            System.out.println(urise.getMessage());
         }
     }
 

@@ -2,7 +2,9 @@ package src;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -10,13 +12,16 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
@@ -40,6 +45,7 @@ public class GUI extends JFrame {
     private static Font font;
     private static final FileOperations fileOps = new FileOperations();
     private static boolean usedEnter = false;
+    private static Color correctColor, incorrectColor;
 
     public GUI() {
         //Set the basics of the frame
@@ -55,6 +61,10 @@ public class GUI extends JFrame {
 
         //Create a set
         set = new SimpleAttributeSet();
+
+        //Set colors
+        correctColor = Color.BLACK;
+        incorrectColor = Color.RED;
 
         //Creates dictionary
         dictionary = dict.getDictionary();
@@ -79,7 +89,7 @@ public class GUI extends JFrame {
 
         //Create an exit JMenuItem
         JMenuItem exitItem = new JMenuItem("Exit", KeyEvent.VK_E);
-        exitItem.setToolTipText("Exit Application");
+        exitItem.setToolTipText("Exit application");
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         exitItem.addActionListener(new ActionListener() {
             @Override
@@ -90,7 +100,7 @@ public class GUI extends JFrame {
 
         //Create a save JMenuItem
         JMenuItem saveItem = new JMenuItem("Save", KeyEvent.VK_S);
-        saveItem.setToolTipText("Save Text to File");
+        saveItem.setToolTipText("Save text to a file");
         saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         saveItem.addActionListener(new ActionListener() {
             @Override
@@ -111,7 +121,7 @@ public class GUI extends JFrame {
 
         //Create a load JMenuItem
         JMenuItem loadItem = new JMenuItem("Load", KeyEvent.VK_L);
-        loadItem.setToolTipText("Load Text from File");
+        loadItem.setToolTipText("Load text from a file");
         loadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
         loadItem.addActionListener(new ActionListener() {
             @Override
@@ -137,19 +147,44 @@ public class GUI extends JFrame {
         editMenu.setMnemonic(KeyEvent.VK_E);
 
         //Create a font JMenuItem
-        JMenuItem fontItem = new JMenuItem("Font Size", KeyEvent.VK_F);
-        fontItem.setToolTipText("Change Font Size");
-        fontItem.addActionListener(new ActionListener() {
+        JMenuItem fontMenuItem = new JMenuItem("Font", KeyEvent.VK_F);
+        fontMenuItem.setToolTipText("Change font settings");
+        fontMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fontSiize = JOptionPane.showInputDialog(panel, "Enter Desired Font Size");
-                try {
-                    int size = Integer.parseInt(fontSiize);
-                    font = new Font(font.getFontName(), font.getStyle(), size);
-                    textBox.setFont(font);
-                } catch (NumberFormatException nfe) {
-                    JOptionPane.showMessageDialog(panel, "You must enter a number for font size", "ERROR", JOptionPane.ERROR_MESSAGE);
-                }
+                JFrame fontFrame = new JFrame("Font Settings");
+                fontFrame.setLocationRelativeTo(null);
+                fontFrame.setSize(150, 150);
+                fontFrame.setVisible(true);
+
+                JPanel panel = new JPanel(new GridLayout(10, 3), true);
+
+                JLabel fontLabel = new JLabel("Font Type");
+                panel.add(fontLabel);
+
+                ActionListener buttonListener = new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println(e.getSource());
+                    }
+                };
+
+                JRadioButton serifButton = new JRadioButton("Serif", true);
+                serifButton.addActionListener(buttonListener);
+                JRadioButton sansSerifButton = new JRadioButton("Sans Serif", false);
+                sansSerifButton.addActionListener(buttonListener);
+
+                panel.add(serifButton);
+                panel.add(sansSerifButton);
+
+                ButtonGroup group = new ButtonGroup();
+                group.add(serifButton);
+                group.add(sansSerifButton);
+
+                int[] fontStylesInt = {Font.PLAIN, Font.BOLD, Font.ITALIC, Font.BOLD + Font.ITALIC};
+                String[] fontStyles = {"Normal", "Bold", "Italic", "Bold & Italic"};
+
+                fontFrame.setContentPane(panel);
             }
         });
 
@@ -172,7 +207,7 @@ public class GUI extends JFrame {
         fileMenu.add(saveItem);
         fileMenu.add(loadItem);
         fileMenu.add(exitItem);
-        editMenu.add(fontItem);
+        editMenu.add(fontMenuItem);
         helpMenu.add(helpItem);
 
         //Add Menus to JMenuBar
@@ -238,10 +273,10 @@ public class GUI extends JFrame {
             textBox.setText("");
             for (Word word : words) {
                 if (word.isWord(dictionary)) {
-                    StyleConstants.setForeground(set, Color.BLACK);
+                    StyleConstants.setForeground(set, correctColor);
                     document.insertString(document.getLength(), word.getWord() + " ", set);
                 } else {
-                    StyleConstants.setForeground(set, Color.RED);
+                    StyleConstants.setForeground(set, incorrectColor);
                     document.insertString(document.getLength(), word.getWord() + " ", set);
                 }
             }

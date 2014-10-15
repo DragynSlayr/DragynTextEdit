@@ -96,13 +96,10 @@ public class GUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         //Create a file JMenu
-        JMenu fileMenu = new JMenu("File");
-        fileMenu.setMnemonic(KeyEvent.VK_F);
+        JMenu fileMenu = createJMenu("File", KeyEvent.VK_F);
 
         //Create an exit JMenuItem
-        JMenuItem exitItem = new JMenuItem("Exit", KeyEvent.VK_E);
-        exitItem.setToolTipText("Exit application");
-        exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+        JMenuItem exitItem = createJMenuItem("Exit", KeyEvent.VK_E, "Exit Application", KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         exitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,38 +108,29 @@ public class GUI extends JFrame {
         });
 
         //Create a save JMenuItem
-        JMenuItem saveItem = new JMenuItem("Save", KeyEvent.VK_S);
-        saveItem.setToolTipText("Save text to a file");
-        saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        JMenuItem saveItem = createJMenuItem("Save", KeyEvent.VK_S, "Save text to a file", KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         saveItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "//Desktop");
                 fileChooser.setDialogTitle("Save");
-
                 int userSelection = fileChooser.showSaveDialog(panel);
-
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
                     File toSave = fileChooser.getSelectedFile();
                     fileOps.write(toSave, textBox.getText());
-
                     JOptionPane.showMessageDialog(panel, "File has been saved", "File Saved", JOptionPane.PLAIN_MESSAGE);
                 }
             }
         });
 
         //Create a load JMenuItem
-        JMenuItem loadItem = new JMenuItem("Load", KeyEvent.VK_L);
-        loadItem.setToolTipText("Load text from a file");
-        loadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+        JMenuItem loadItem = createJMenuItem("Load", KeyEvent.VK_L, "Load text from a file", KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
         loadItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "//Desktop");
                 fileChooser.setDialogTitle("Load");
-
                 int userSelection = fileChooser.showOpenDialog(panel);
-
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
                     for (int i = 0; i < 2; i++) {
                         File toLoad = fileChooser.getSelectedFile();
@@ -155,30 +143,27 @@ public class GUI extends JFrame {
         });
 
         //Create a edit JMenu
-        JMenu editMenu = new JMenu("Edit");
-        editMenu.setMnemonic(KeyEvent.VK_E);
+        JMenu editMenu = createJMenu("Edit", KeyEvent.VK_E);
 
         //Create a font JMenuItem
-        JMenuItem fontMenuItem = new JMenuItem("Font", KeyEvent.VK_F);
-        fontMenuItem.setToolTipText("Change font settings");
+        JMenuItem fontMenuItem = createJMenuItem("Font", KeyEvent.VK_F, "Change font settings", null);
         fontMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final ButtonGroup group = new ButtonGroup();
+                createFontMenu();
+            }
 
+            private void createFontMenu() {
+                final ButtonGroup group = new ButtonGroup();
                 final JFrame fontFrame = new JFrame("Font Settings");
                 fontFrame.setSize(getWidth(), getHeight());
                 fontFrame.setLocationRelativeTo(null);
                 fontFrame.setVisible(true);
-
                 final JPanel panel = new JPanel(new GridLayout(10, 3), true);
-
                 fontExample = new JTextField();
                 fontExample.setFont(selected);
-
                 JLabel fontLabel = new JLabel("Font Type");
                 panel.add(fontLabel);
-
                 ActionListener buttonListener = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -192,21 +177,16 @@ public class GUI extends JFrame {
                         fontExample.setFont(selected);
                     }
                 };
-
                 JRadioButton serifButton = new JRadioButton("Serif", true);
                 serifButton.addActionListener(buttonListener);
                 JRadioButton sansSerifButton = new JRadioButton("Sans Serif", false);
                 sansSerifButton.addActionListener(buttonListener);
-
                 panel.add(serifButton);
                 panel.add(sansSerifButton);
-
                 group.add(serifButton);
                 group.add(sansSerifButton);
-
                 final JLabel sizeLabel = new JLabel("Font Size: " + fontSize);
                 panel.add(sizeLabel);
-
                 JSlider sizeSlider = new JSlider(JSlider.HORIZONTAL, 10, 100, fontSize);
                 sizeSlider.setMajorTickSpacing(10);
                 sizeSlider.setMinorTickSpacing(5);
@@ -222,12 +202,9 @@ public class GUI extends JFrame {
                         sizeLabel.setText("Font Size: " + fontSize);
                     }
                 });
-
                 panel.add(sizeSlider);
-
                 String[] fontStyles = {"Normal", "Bold", "Italic", "Bold & Italic"};
                 final int[] fontStylesInt = {Font.PLAIN, Font.BOLD, Font.ITALIC, Font.BOLD + Font.ITALIC};
-
                 final JComboBox fontStylesBox = new JComboBox(fontStyles);
                 fontStylesBox.setSelectedIndex(0);
                 fontStylesBox.addItemListener(new ItemListener() {
@@ -240,16 +217,11 @@ public class GUI extends JFrame {
                         }
                     }
                 });
-
                 panel.add(fontStylesBox);
-
                 fontExample.setText("Example Text");
                 panel.add(fontExample);
-
                 fontFrame.setContentPane(panel);
-
                 fontFrame.addWindowListener(new WindowListener() {
-
                     @Override
                     public void windowOpened(WindowEvent e) {
                     }
@@ -281,18 +253,15 @@ public class GUI extends JFrame {
                     public void windowDeactivated(WindowEvent e) {
                     }
                 });
-
             }
         }
         );
 
         //Create a help JMenu
-        JMenu helpMenu = new JMenu("Help");
-        helpMenu.setMnemonic(KeyEvent.VK_H);
+        JMenu helpMenu = createJMenu("Help", KeyEvent.VK_H);
 
         //Create a help JMenuItem
-        JMenuItem helpItem = new JMenuItem("Help", KeyEvent.VK_L);
-        helpItem.setToolTipText("Help");
+        JMenuItem helpItem = createJMenuItem("Help", KeyEvent.VK_L, "Help", null);
         helpItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -359,6 +328,35 @@ public class GUI extends JFrame {
     }
 
     /**
+     * Creates a new JMenu
+     *
+     * @param name The name of the new menu
+     * @param mnemonic The shortcut key
+     * @return New JMenu
+     */
+    private static JMenu createJMenu(String name, int mnemonic) {
+        JMenu menu = new JMenu(name);
+        menu.setMnemonic(mnemonic);
+        return menu;
+    }
+
+    /**
+     * Creates a new JMenuItem
+     *
+     * @param name The name of the item
+     * @param mnemonic The shortcut key
+     * @param tooltip The tool tip text
+     * @param keyStroke The accelerated key combo
+     * @return New JMenuItem
+     */
+    private JMenuItem createJMenuItem(String name, int mnemonic, String tooltip, KeyStroke keyStroke) {
+        JMenuItem menuItem = new JMenuItem(name, mnemonic);
+        menuItem.setToolTipText(tooltip);
+        menuItem.setAccelerator(keyStroke);
+        return menuItem;
+    }
+
+    /**
      * Updates the main text area
      */
     private static void updateTextArea() {
@@ -414,4 +412,5 @@ public class GUI extends JFrame {
         }
         usedEnter = false;
     }
+
 }

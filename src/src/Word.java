@@ -13,7 +13,7 @@ public class Word {
 			"<", ">", "\"", "â€œ", "â€�", "â€˜", "â€™", "{", "}", "[", "]",
 			"|", "\\", "(", ")", "!", "@", "#", "$", "%", "^", "&", "*", "-",
 			"+", "=", "_", "~", "`", "\n",
-			System.getProperty("line.separator"), " ", "" };
+			System.getProperty("line.separator"), " ", "", "	", "\r"};
 
 	public Word(String term) {
 		input = term;

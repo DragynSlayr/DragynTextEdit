@@ -32,10 +32,7 @@ import javax.swing.text.StyleConstants;
  */
 public class GUI extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6217438481419111153L;
+	private static final long serialVersionUID = 1L;
 	private static JPanel panel;
 	public static JTextPane textBox;
 	private static DefaultStyledDocument document;
@@ -44,7 +41,6 @@ public class GUI extends JFrame {
 	private static ArrayList<String> dictionary;
 	private static Font font;
 	private static final FileOperations fileOps = new FileOperations();
-	private static boolean usedEnter = false;
 	private static Color correctColor, incorrectColor;
 
 	public GUI() {
@@ -137,11 +133,21 @@ public class GUI extends JFrame {
 		});
 
 		// Create a edit JMenu
-		JMenu editMenu = createJMenu("Edit", KeyEvent.VK_E);
+		JMenu editMenu = createJMenu("Editing", KeyEvent.VK_E);
 
 		// Create a font JMenuItem
 		JMenuItem fontMenuItem = new FontMenu(getWidth(), getHeight(), "Font",
 				KeyEvent.VK_F, "Change font settings", null).getMenu();
+
+		// Create a spell check JMenuItem
+		JMenuItem spellCheckItem = createJMenuItem("Check Spelling",
+				KeyEvent.VK_S, "Review Spelling",
+				KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+		spellCheckItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateTextArea();
+			}
+		});
 
 		// Create a help JMenu
 		JMenu helpMenu = createJMenu("Help", KeyEvent.VK_H);
@@ -166,6 +172,7 @@ public class GUI extends JFrame {
 		fileMenu.add(loadItem);
 		fileMenu.add(exitItem);
 		editMenu.add(fontMenuItem);
+		editMenu.add(spellCheckItem);
 		helpMenu.add(helpItem);
 
 		// Add Menus to JMenuBar
@@ -187,10 +194,6 @@ public class GUI extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_SPACE:
-					updateLastWord();
-					break;
-				case KeyEvent.VK_ENTER:
-					usedEnter = true;
 					updateLastWord();
 					break;
 				}
@@ -280,15 +283,9 @@ public class GUI extends JFrame {
 				String[] split = textBox.getText().split(" ");
 				Word word = new Word(split[split.length - 1]);
 				int docLength;
-				if (usedEnter) {
-					docLength = document.getLength();
-				} else {
-					docLength = document.getLength() - 1;
-				}
 				int length = split[split.length - 1].length() - 1;
-				if (usedEnter) {
-					StyleConstants.setForeground(set, Color.BLACK);
-				}
+				docLength = document.getLength() - 1;
+				StyleConstants.setForeground(set, Color.BLACK);
 				if (word.isWord(dictionary)) {
 					StyleConstants.setForeground(set, Color.BLACK);
 					document.replace(docLength - length, word.getWord()
@@ -302,7 +299,6 @@ public class GUI extends JFrame {
 				System.out.println("Couldn't replace string");
 			}
 		}
-		usedEnter = false;
 	}
 
 }

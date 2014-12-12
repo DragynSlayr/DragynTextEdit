@@ -274,15 +274,21 @@ public class GUI extends JFrame {
 				words.add(new Word(s));
 			}
 			textBox.setText("");
-			for (Word word : words) {
-				if (word.isWord(dictionary)) {
+			for (int i = 0; i < words.size(); i++) {
+				String add;
+				if (i == words.size() - 1) {
+					add = "";
+				} else {
+					add = " ";
+				}
+				if (words.get(i).isWord(dictionary)) {
 					StyleConstants.setForeground(set, correctColor);
-					document.insertString(document.getLength(), word.getWord()
-							+ " ", set);
+					document.insertString(document.getLength(), words.get(i)
+							.getWord() + add, set);
 				} else {
 					StyleConstants.setForeground(set, incorrectColor);
-					document.insertString(document.getLength(), word.getWord()
-							+ " ", set);
+					document.insertString(document.getLength(), words.get(i)
+							.getWord() + add, set);
 				}
 			}
 		} catch (BadLocationException ble) {
@@ -298,18 +304,17 @@ public class GUI extends JFrame {
 			try {
 				String[] split = textBox.getText().split(" ");
 				Word word = new Word(split[split.length - 1]);
-				int docLength;
-				int length = split[split.length - 1].length() - 1;
-				docLength = document.getLength() - 1;
+				int docLength = document.getLength() + 1;
+				int length = split[split.length - 1].length();
 				StyleConstants.setForeground(set, Color.BLACK);
 				if (word.isWord(dictionary)) {
 					StyleConstants.setForeground(set, Color.BLACK);
-					document.replace(docLength - length, word.getWord()
-							.length(), word.getWord(), set);
+					document.replace((docLength - length) - 1, length,
+							word.getWord(), set);
 				} else {
 					StyleConstants.setForeground(set, Color.RED);
-					document.replace(docLength - length, word.getWord()
-							.length(), word.getWord(), set);
+					document.replace((docLength - length) - 1, length,
+							word.getWord(), set);
 				}
 			} catch (BadLocationException ble) {
 				System.out.println("Couldn't replace string");

@@ -51,7 +51,7 @@ public class GUI extends JFrame {
 		setSize(500, 500);
 		setVisible(true);
 		setLocationRelativeTo(null);
-
+		
 		// Create a font
 		font = new Font(Font.SERIF, Font.PLAIN, 20);
 
@@ -136,8 +136,13 @@ public class GUI extends JFrame {
 		JMenu editMenu = createJMenu("Editing", KeyEvent.VK_E);
 
 		// Create a font JMenuItem
-		JMenuItem fontMenuItem = new FontMenu(getWidth(), getHeight(), "Font",
-				KeyEvent.VK_F, "Change font settings", null).getMenu();
+		JMenuItem fontMenuItem = createJMenuItem("Font", KeyEvent.VK_F, "Change font settings", null);
+		fontMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new FontMenu("Font Options", getHeight(), getWidth());
+			}
+		});
 
 		// Create a spell check JMenuItem
 		JMenuItem spellCheckItem = createJMenuItem("Check Spelling",

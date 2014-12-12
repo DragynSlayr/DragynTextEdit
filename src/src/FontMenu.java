@@ -38,10 +38,10 @@ public class FontMenu {
 	int fontStyle = Font.PLAIN;
 	JTextField exampleField;
 
-	public FontMenu(String name, int height, int width) {
+	public FontMenu(String name, int width, int height) {
 		JFrame frame = new JFrame(name);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setSize(height, width);
+		frame.setSize(width, height);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		

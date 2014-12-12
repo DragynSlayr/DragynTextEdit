@@ -42,6 +42,8 @@ public class GUI extends JFrame {
 	private static Font font;
 	private static final FileOperations fileOps = new FileOperations();
 	private static Color correctColor, incorrectColor;
+	private static boolean savedOnce = false;
+	private static File toSave = null;
 
 	public GUI() {
 		// Set the basics of the frame
@@ -51,7 +53,7 @@ public class GUI extends JFrame {
 		setSize(500, 500);
 		setVisible(true);
 		setLocationRelativeTo(null);
-		
+
 		// Create a font
 		font = new Font(Font.SERIF, Font.PLAIN, 20);
 
@@ -98,12 +100,20 @@ public class GUI extends JFrame {
 				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		saveItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser(System
-						.getProperty("user.home") + "//Desktop");
-				fileChooser.setDialogTitle("Save");
-				int userSelection = fileChooser.showSaveDialog(panel);
-				if (userSelection == JFileChooser.APPROVE_OPTION) {
-					File toSave = fileChooser.getSelectedFile();
+				if (!savedOnce) {
+					JFileChooser fileChooser = new JFileChooser(System
+							.getProperty("user.home") + "//Desktop");
+					fileChooser.setDialogTitle("Save");
+					int userSelection = fileChooser.showSaveDialog(panel);
+					if (userSelection == JFileChooser.APPROVE_OPTION) {
+						toSave = fileChooser.getSelectedFile();
+						fileOps.write(toSave, textBox.getText());
+						JOptionPane.showMessageDialog(panel,
+								"File has been saved", "File Saved",
+								JOptionPane.PLAIN_MESSAGE);
+						savedOnce = true;
+					}
+				} else {
 					fileOps.write(toSave, textBox.getText());
 					JOptionPane.showMessageDialog(panel, "File has been saved",
 							"File Saved", JOptionPane.PLAIN_MESSAGE);
@@ -136,11 +146,12 @@ public class GUI extends JFrame {
 		JMenu editMenu = createJMenu("Editing", KeyEvent.VK_E);
 
 		// Create a font JMenuItem
-		JMenuItem fontMenuItem = createJMenuItem("Font", KeyEvent.VK_F, "Change font settings", null);
+		JMenuItem fontMenuItem = createJMenuItem("Font", KeyEvent.VK_F,
+				"Change font settings", null);
 		fontMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new FontMenu("Font Options", getHeight(), getWidth());
+				new FontMenu("Font Options", getWidth(), getHeight());
 			}
 		});
 

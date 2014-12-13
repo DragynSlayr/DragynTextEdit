@@ -17,6 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -42,11 +45,15 @@ public class GUI extends JFrame {
 		setVisible(true);
 		setLocationRelativeTo(null);
 
+		// Declare new textField and spellChecker
 		textField = new TextField(correctColor, incorrectColor);
 		checker = new SpellChecker(textField);
 
 		// Sets up the user interface
 		setupUI();
+
+		// Update the components of the window
+		SwingUtilities.updateComponentTreeUI(this);
 	}
 
 	/**
@@ -188,6 +195,15 @@ public class GUI extends JFrame {
 
 		// Sets content
 		setContentPane(panel);
+
+		// Set the theme of the program
+		try {
+			UIManager
+					.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			System.out.println("Could not apply theme");
+		}
 	}
 
 	/**

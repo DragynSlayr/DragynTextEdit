@@ -29,14 +29,14 @@ import javax.swing.event.ChangeListener;
  */
 public class FontMenu {
 
-	JPanel cards;
-	final String FONT_TYPE = "Font Type";
-	final String FONT_SIZE = "Font Size";
-	final String FONT_STYLE = "Font Style";
-	String fontType = "Serif";
-	int fontSize = 20;
-	int fontStyle = Font.PLAIN;
-	JTextField exampleField;
+	private JPanel cards;
+	private final String FONT_TYPE = "Font Type";
+	private final String FONT_SIZE = "Font Size";
+	private final String FONT_STYLE = "Font Style";
+	private String fontType = "Serif";
+	private int fontSize = 20;
+	private int fontStyle = Font.PLAIN;
+	private JTextField exampleField;
 
 	public FontMenu(String name, int width, int height) {
 		JFrame frame = new JFrame(name);
@@ -44,7 +44,7 @@ public class FontMenu {
 		frame.setSize(width, height);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
+
 		exampleField = new JTextField("Example Text");
 		exampleField.setHorizontalAlignment(JTextField.CENTER);
 		setFont();
@@ -146,10 +146,10 @@ public class FontMenu {
 		panel.add(cards);
 
 		panel.add(exampleField);
-		
+
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				GUI.textBox.setFont(new Font(fontType, fontStyle, fontSize));
+				GUI.textField.setFont(new Font(fontType, fontStyle, fontSize));
 			}
 		});
 	}

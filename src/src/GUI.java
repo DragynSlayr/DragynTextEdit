@@ -2,13 +2,10 @@ package src;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JFileChooser;
@@ -19,31 +16,22 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 
 /**
  *
  * @author Inderpreet
  */
+@SuppressWarnings("serial")
 public class GUI extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private static JPanel panel;
-	public static JTextPane textBox;
-	private static DefaultStyledDocument document;
-	private static SimpleAttributeSet set;
-	private static final Dictionary dict = new Dictionary();
-	private static ArrayList<String> dictionary;
-	private static Font font;
-	private static final FileOperations fileOps = new FileOperations();
-	private static Color correctColor, incorrectColor;
-	private static boolean savedOnce = false;
-	private static File toSave = null;
+	private JPanel panel;
+	private final FileOperations fileOps = new FileOperations();
+	private boolean savedOnce = false;
+	private File toSave = null;
+	static TextField textField;
+	private SpellChecker checker;
+	private Color correctColor = Color.BLACK, incorrectColor = Color.RED;
 
 	public GUI() {
 		// Set the basics of the frame
@@ -54,19 +42,10 @@ public class GUI extends JFrame {
 		setVisible(true);
 		setLocationRelativeTo(null);
 
-		// Create a font
-		font = new Font(Font.SERIF, Font.PLAIN, 20);
+		textField = new TextField(correctColor, incorrectColor);
+		checker = new SpellChecker(textField);
 
-		// Create a set
-		set = new SimpleAttributeSet();
-
-		// Set colors
-		correctColor = Color.BLACK;
-		incorrectColor = Color.RED;
-
-		// Creates dictionary
-		dictionary = dict.getDictionary();
-
+		// Sets up the user interface
 		setupUI();
 	}
 
@@ -107,14 +86,14 @@ public class GUI extends JFrame {
 					int userSelection = fileChooser.showSaveDialog(panel);
 					if (userSelection == JFileChooser.APPROVE_OPTION) {
 						toSave = fileChooser.getSelectedFile();
-						fileOps.write(toSave, textBox.getText());
+						fileOps.write(toSave, textField.getTextBox().getText());
 						JOptionPane.showMessageDialog(panel,
 								"File has been saved", "File Saved",
 								JOptionPane.PLAIN_MESSAGE);
 						savedOnce = true;
 					}
 				} else {
-					fileOps.write(toSave, textBox.getText());
+					fileOps.write(toSave, textField.getTextBox().getText());
 					JOptionPane.showMessageDialog(panel, "File has been saved",
 							"File Saved", JOptionPane.PLAIN_MESSAGE);
 				}
@@ -135,9 +114,9 @@ public class GUI extends JFrame {
 					for (int i = 0; i < 2; i++) {
 						File toLoad = fileChooser.getSelectedFile();
 						String loaded = fileOps.read(toLoad);
-						textBox.setText(loaded);
+						textField.getTextBox().setText(loaded);
 					}
-					updateTextArea();
+					checker.checkTextArea();
 				}
 			}
 		});
@@ -161,7 +140,7 @@ public class GUI extends JFrame {
 				KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
 		spellCheckItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateTextArea();
+				checker.checkTextArea();
 			}
 		});
 
@@ -200,27 +179,11 @@ public class GUI extends JFrame {
 		// Set JMenuBar
 		setJMenuBar(menuBar);
 
-		// Create a document
-		document = new DefaultStyledDocument();
-
-		// Create the JTextArea
-		textBox = new JTextPane(document);
-		textBox.setFont(font);
-		textBox.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				switch (e.getKeyCode()) {
-				case KeyEvent.VK_SPACE:
-					updateLastWord();
-					break;
-				}
-			}
-		});
-
 		// Add the JTextArea
-		panel.add(textBox);
+		panel.add(textField.getTextBox());
 
 		// Create the JScrollPane
-		JScrollPane scrollPane = new JScrollPane(textBox);
+		JScrollPane scrollPane = new JScrollPane(textField.getTextBox());
 		panel.add(scrollPane);
 
 		// Sets content
@@ -261,65 +224,6 @@ public class GUI extends JFrame {
 		menuItem.setToolTipText(tooltip);
 		menuItem.setAccelerator(keyStroke);
 		return menuItem;
-	}
-
-	/**
-	 * Updates the main text area
-	 */
-	private static void updateTextArea() {
-		try {
-			String[] split = textBox.getText().split(" ");
-			ArrayList<Word> words = new ArrayList<Word>();
-			for (String s : split) {
-				words.add(new Word(s));
-			}
-			textBox.setText("");
-			for (int i = 0; i < words.size(); i++) {
-				String add;
-				if (i == words.size() - 1) {
-					add = "";
-				} else {
-					add = " ";
-				}
-				if (words.get(i).isWord(dictionary)) {
-					StyleConstants.setForeground(set, correctColor);
-					document.insertString(document.getLength(), words.get(i)
-							.getWord() + add, set);
-				} else {
-					StyleConstants.setForeground(set, incorrectColor);
-					document.insertString(document.getLength(), words.get(i)
-							.getWord() + add, set);
-				}
-			}
-		} catch (BadLocationException ble) {
-			System.out.println("Couldn't insert string");
-		}
-	}
-
-	/**
-	 * Checks the spelling of the last term
-	 */
-	private static void updateLastWord() {
-		if (textBox.getCaretPosition() == document.getLength()) {
-			try {
-				String[] split = textBox.getText().split(" ");
-				Word word = new Word(split[split.length - 1]);
-				int docLength = document.getLength() + 1;
-				int length = split[split.length - 1].length();
-				StyleConstants.setForeground(set, Color.BLACK);
-				if (word.isWord(dictionary)) {
-					StyleConstants.setForeground(set, Color.BLACK);
-					document.replace((docLength - length) - 1, length,
-							word.getWord(), set);
-				} else {
-					StyleConstants.setForeground(set, Color.RED);
-					document.replace((docLength - length) - 1, length,
-							word.getWord(), set);
-				}
-			} catch (BadLocationException ble) {
-				System.out.println("Couldn't replace string");
-			}
-		}
 	}
 
 }

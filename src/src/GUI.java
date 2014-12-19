@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.Box;
@@ -39,7 +41,7 @@ public class GUI extends JFrame {
 	public GUI() {
 		// Set the basics of the frame
 		super("Dragyn TextEdit");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
 		setSize(500, 500);
 		setVisible(true);
@@ -54,6 +56,30 @@ public class GUI extends JFrame {
 
 		// Update the components of the window
 		SwingUtilities.updateComponentTreeUI(this);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				int selection = JOptionPane.showConfirmDialog(panel,
+						"Save file before closing?", "Exit Confirmation",
+						JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+				switch (selection) {
+				case JOptionPane.YES_OPTION:
+					JFileChooser fileChooser = new JFileChooser(
+							System.getProperty("user.home") + "//Desktop");
+					fileChooser.setDialogTitle("Save");
+					int userSelection = fileChooser.showSaveDialog(panel);
+					if (userSelection == JFileChooser.APPROVE_OPTION) {
+						toSave = fileChooser.getSelectedFile();
+						fileOps.write(toSave, textField.getTextBox().getText());
+					}
+				case JOptionPane.NO_OPTION:
+					System.exit(0);
+					break;
+				default:
+					break;
+				}
+			}
+		});
 	}
 
 	/**

@@ -58,26 +58,7 @@ public class GUI extends JFrame {
 		SwingUtilities.updateComponentTreeUI(this);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				int selection = JOptionPane.showConfirmDialog(panel,
-						"Save file before closing?", "Exit Confirmation",
-						JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE);
-				switch (selection) {
-				case JOptionPane.YES_OPTION:
-					JFileChooser fileChooser = new JFileChooser(
-							System.getProperty("user.home") + "//Desktop");
-					fileChooser.setDialogTitle("Save");
-					int userSelection = fileChooser.showSaveDialog(panel);
-					if (userSelection == JFileChooser.APPROVE_OPTION) {
-						toSave = fileChooser.getSelectedFile();
-						fileOps.write(toSave, textField.getTextBox().getText());
-					}
-				case JOptionPane.NO_OPTION:
-					System.exit(0);
-					break;
-				default:
-					break;
-				}
+				checkBeforeClosing();
 			}
 		});
 	}
@@ -102,7 +83,7 @@ public class GUI extends JFrame {
 				KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		exitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				checkBeforeClosing();
 			}
 		});
 
@@ -122,13 +103,13 @@ public class GUI extends JFrame {
 						fileOps.write(toSave, textField.getTextBox().getText());
 						JOptionPane.showMessageDialog(panel,
 								"File has been saved", "File Saved",
-								JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.INFORMATION_MESSAGE);
 						savedOnce = true;
 					}
 				} else {
 					fileOps.write(toSave, textField.getTextBox().getText());
 					JOptionPane.showMessageDialog(panel, "File has been saved",
-							"File Saved", JOptionPane.PLAIN_MESSAGE);
+							"File Saved", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
@@ -150,6 +131,7 @@ public class GUI extends JFrame {
 						textField.getTextBox().setText(loaded);
 					}
 					checker.checkTextArea();
+					showSpellCheckNotification();
 				}
 			}
 		});
@@ -174,6 +156,7 @@ public class GUI extends JFrame {
 		spellCheckItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				checker.checkTextArea();
+				showSpellCheckNotification();
 			}
 		});
 
@@ -191,7 +174,7 @@ public class GUI extends JFrame {
 								"Type as you would normally and the program will find and"
 										+ "\n"
 										+ " mark incorrectly spelled words upon pressing \"Space\"",
-								"Help Message", JOptionPane.PLAIN_MESSAGE);
+								"Help Message", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -266,6 +249,44 @@ public class GUI extends JFrame {
 		menuItem.setToolTipText(tooltip);
 		menuItem.setAccelerator(keyStroke);
 		return menuItem;
+	}
+
+	/**
+	 * Displays a dialog with number of errors found
+	 */
+	private void showSpellCheckNotification() {
+		int errorsFound = checker.getErrorsFound();
+		String errorString = "Found " + checker.getErrorsFound() + " errors";
+		if (errorsFound < 2 && errorsFound != 0) {
+			errorString = "Found " + checker.getErrorsFound() + "error";
+		}
+		JOptionPane.showMessageDialog(panel, errorString,
+				"Spell Check Complete", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/**
+	 * checks if the user wants to save before exiting
+	 */
+	private void checkBeforeClosing() {
+		int selection = JOptionPane.showConfirmDialog(panel,
+				"Save file before closing?", "Exit Confirmation",
+				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		switch (selection) {
+		case JOptionPane.YES_OPTION:
+			JFileChooser fileChooser = new JFileChooser(
+					System.getProperty("user.home") + "//Desktop");
+			fileChooser.setDialogTitle("Save");
+			int userSelection = fileChooser.showSaveDialog(panel);
+			if (userSelection == JFileChooser.APPROVE_OPTION) {
+				toSave = fileChooser.getSelectedFile();
+				fileOps.write(toSave, textField.getTextBox().getText());
+			}
+		case JOptionPane.NO_OPTION:
+			System.exit(0);
+			break;
+		default:
+			break;
+		}
 	}
 
 }

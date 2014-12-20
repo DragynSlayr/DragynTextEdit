@@ -9,6 +9,7 @@ public class SpellChecker {
 
 	private static ArrayList<String> dictionary;
 	private static TextField textField;
+	private static int errorsFound = 0;
 
 	public SpellChecker(TextField textField) {
 		// Creates dictionary
@@ -23,6 +24,7 @@ public class SpellChecker {
 	 * Checks the spelling of the main text area
 	 */
 	public void checkTextArea() {
+		errorsFound = 0;
 		try {
 			String[] split = textField.getTextBox().getText().split(" ");
 			ArrayList<Word> words = new ArrayList<Word>();
@@ -44,6 +46,7 @@ public class SpellChecker {
 							textField.getDocument().getLength(),
 							words.get(i).getWord() + add, textField.getSet());
 				} else {
+					errorsFound++;
 					StyleConstants.setForeground(textField.getSet(),
 							textField.getColor("incorrect"));
 					textField.getDocument().insertString(
@@ -83,6 +86,15 @@ public class SpellChecker {
 				System.out.println("Couldn't replace string");
 			}
 		}
+	}
+	
+	
+	/**
+	 * Returns the number of errors found
+	 * @return number of errors
+	 */
+	public int getErrorsFound() {
+		return errorsFound;
 	}
 
 }

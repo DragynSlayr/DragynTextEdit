@@ -258,7 +258,7 @@ public class GUI extends JFrame {
 		int errorsFound = checker.getErrorsFound();
 		String errorString = "Found " + checker.getErrorsFound() + " errors";
 		if (errorsFound < 2 && errorsFound != 0) {
-			errorString = "Found " + checker.getErrorsFound() + "error";
+			errorString = "Found " + checker.getErrorsFound() + " error";
 		}
 		JOptionPane.showMessageDialog(panel, errorString,
 				"Spell Check Complete", JOptionPane.INFORMATION_MESSAGE);

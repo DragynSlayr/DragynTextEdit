@@ -1,11 +1,9 @@
 package src;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
@@ -43,14 +41,8 @@ public class Dictionary {
 	 * Initializes the reader variable
 	 */
 	private void initializeReader() {
-		try {
-			reader = new BufferedReader(new FileReader(new File(getClass()
-					.getResource("dict.txt").toURI())));
-		} catch (FileNotFoundException ex) {
-			System.out.println("Could not find dict.txt");
-		} catch (URISyntaxException urise) {
-			System.out.println(urise.getMessage());
-		}
+		InputStream input = getClass().getResourceAsStream("dict.txt");
+		reader = new BufferedReader(new InputStreamReader(input));
 	}
 
 	/**

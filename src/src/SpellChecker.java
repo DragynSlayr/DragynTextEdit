@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyleConstants;
 
+/**
+ * 
+ * @author Inderpreet
+ *
+ */
 public class SpellChecker {
 
 	private static ArrayList<String> dictionary;

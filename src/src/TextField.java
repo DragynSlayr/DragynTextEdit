@@ -9,6 +9,11 @@ import javax.swing.JTextPane;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 
+/**
+ * 
+ * @author Inderpreet
+ *
+ */
 public class TextField {
 
 	private Font font;
@@ -57,6 +62,11 @@ public class TextField {
 		return document;
 	}
 
+	/**
+	 * Gets a color
+	 * @param name "correct" or "incorrect" are valid
+	 * @return a color
+	 */
 	public Color getColor(String name) {
 		if (name.equalsIgnoreCase("correct")) {
 			return correctColor;
@@ -67,6 +77,10 @@ public class TextField {
 		}
 	}
 	
+	/**
+	 * Sets the font used for the JTextPane
+	 * @param f the desired font
+	 */
 	public void setFont(Font f) {
 		font = f;
 		textBox.setFont(font);

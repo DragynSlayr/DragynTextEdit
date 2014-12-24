@@ -38,6 +38,8 @@ public class FontMenu {
 	private int fontStyle = Font.PLAIN;
 	private JTextField exampleField;
 
+	// @TODO add the option to pick a color for the correct and incorrect colors
+
 	public FontMenu(String name, int width, int height) {
 		JFrame frame = new JFrame(name);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

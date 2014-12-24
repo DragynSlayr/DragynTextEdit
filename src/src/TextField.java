@@ -48,6 +48,9 @@ public class TextField {
 				}
 			}
 		});
+
+		// Set the starting color
+		textBox.setForeground(this.correctColor);
 	}
 
 	public JTextPane getTextBox() {
@@ -64,7 +67,9 @@ public class TextField {
 
 	/**
 	 * Gets a color
-	 * @param name "correct" or "incorrect" are valid
+	 * 
+	 * @param name
+	 *            "correct" or "incorrect" are valid
 	 * @return a color
 	 */
 	public Color getColor(String name) {
@@ -76,10 +81,12 @@ public class TextField {
 			return Color.GRAY;
 		}
 	}
-	
+
 	/**
 	 * Sets the font used for the JTextPane
-	 * @param f the desired font
+	 * 
+	 * @param f
+	 *            the desired font
 	 */
 	public void setFont(Font f) {
 		font = f;

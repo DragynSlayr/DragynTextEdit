@@ -26,6 +26,7 @@ import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyleConstants;
 
 /**
  *
@@ -75,6 +76,12 @@ public class FontMenu {
 				}
 			}
 		});
+
+		// Set alignment of the exampleField
+		StyleConstants.setAlignment(checker.getTextField().getSet(),
+				StyleConstants.ALIGN_CENTER);
+		document.setParagraphAttributes(0, document.getLength(), checker
+				.getTextField().getSet(), false);
 
 		setFont();
 

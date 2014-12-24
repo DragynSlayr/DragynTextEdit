@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -49,7 +50,20 @@ public class GUI extends JFrame {
 
 		// Declare new textField and spellChecker
 		textField = new TextField(correctColor, incorrectColor);
+
+		// Initialize checker
 		checker = new SpellChecker(textField);
+
+		//Set the keyListener of the textField
+		textField.setKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				switch (e.getKeyCode()) {
+				case KeyEvent.VK_SPACE:
+					checker.checkLastWord();
+					break;
+				}
+			}
+		});
 
 		// Sets up the user interface
 		setupUI();

@@ -67,7 +67,7 @@ public class SpellChecker {
 	/**
 	 * Checks the spelling of the last word
 	 */
-	public static void checkLastWord() {
+	public void checkLastWord() {
 		if (textField.getTextBox().getCaretPosition() == textField
 				.getDocument().getLength()) {
 			try {
@@ -75,7 +75,8 @@ public class SpellChecker {
 				Word word = new Word(split[split.length - 1]);
 				int docLength = textField.getDocument().getLength() + 1;
 				int length = split[split.length - 1].length();
-				StyleConstants.setForeground(textField.getSet(), textField.getColor("correct"));
+				StyleConstants.setForeground(textField.getSet(),
+						textField.getColor("correct"));
 				if (word.isWord(dictionary)) {
 					StyleConstants.setForeground(textField.getSet(),
 							textField.getColor("correct"));
@@ -92,14 +93,22 @@ public class SpellChecker {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Returns the number of errors found
+	 * 
 	 * @return number of errors
 	 */
 	public int getErrorsFound() {
 		return errorsFound;
+	}
+	
+	/**
+	 * Gets textField
+	 * @return The text field
+	 */
+	public TextField getTextField() {
+		return textField;
 	}
 
 }

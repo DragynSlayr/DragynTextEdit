@@ -2,8 +2,7 @@ package src;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JTextPane;
 import javax.swing.text.DefaultStyledDocument;
@@ -22,13 +21,22 @@ public class TextField {
 	private SimpleAttributeSet set;
 	private Color correctColor, incorrectColor;
 
+	public TextField(Color correctColor, Color incorrectColor, JTextPane pane) {
+		this.textBox = pane;
+
+		set = new SimpleAttributeSet();
+
+		document = (DefaultStyledDocument) pane.getDocument();
+
+		setColors(correctColor, incorrectColor);
+	}
+
 	public TextField(Color correctColor, Color incorrectColor) {
 		// Create a simple attribute set
 		set = new SimpleAttributeSet();
 
 		// Set colors
-		this.correctColor = correctColor;
-		this.incorrectColor = incorrectColor;
+		setColors(correctColor, incorrectColor);
 
 		// Create a font
 		font = new Font(Font.SERIF, Font.PLAIN, 20);
@@ -39,18 +47,26 @@ public class TextField {
 		// Create the JTextArea
 		textBox = new JTextPane(document);
 		textBox.setFont(font);
-		textBox.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				switch (e.getKeyCode()) {
-				case KeyEvent.VK_SPACE:
-					SpellChecker.checkLastWord();
-					break;
-				}
-			}
-		});
 
 		// Set the starting color
 		textBox.setForeground(this.correctColor);
+	}
+
+	public void setKeyListener(KeyListener listener) {
+		textBox.addKeyListener(listener);
+	}
+
+	/**
+	 * Sets the colors to be used for the text
+	 * 
+	 * @param correctColor
+	 *            The color for correct words
+	 * @param incorrectColor
+	 *            The color for incorrect words
+	 */
+	public void setColors(Color correctColor, Color incorrectColor) {
+		this.correctColor = correctColor;
+		this.incorrectColor = incorrectColor;
 	}
 
 	public JTextPane getTextBox() {

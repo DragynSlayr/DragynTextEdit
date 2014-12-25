@@ -24,6 +24,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import file.Deserializer;
 import file.FileOperations;
 import spelling.SpellChecker;
 
@@ -38,8 +39,8 @@ public class GUI extends JFrame {
 	private final FileOperations fileOps = new FileOperations();
 	private boolean savedOnce = false;
 	private File toSave = null;
-	static TextField textField;
-	static SpellChecker checker;
+	public static TextField textField;
+	public static SpellChecker checker;
 	private Color correctColor = Color.BLACK, incorrectColor = Color.RED;
 
 	public GUI() {
@@ -80,6 +81,10 @@ public class GUI extends JFrame {
 				checkBeforeClosing();
 			}
 		});
+		
+		// Create a deserializer
+		Deserializer deserializer = new Deserializer();
+		deserializer.deserialize();
 	}
 
 	/**

@@ -31,6 +31,7 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyleConstants;
 
 import spelling.SpellChecker;
+import file.Serializer;
 
 /**
  *
@@ -43,14 +44,16 @@ public class FontMenu {
 	private final String FONT_SIZE = "Font Size";
 	private final String FONT_STYLE = "Font Style";
 	private final String FONT_COLOR = "Font Colors";
-	private String fontType = "Serif";
-	private int fontSize = 20;
-	private int fontStyle = Font.PLAIN;
+	private static String fontType = "Serif";
+	private static int fontSize = 20;
+	private static int fontStyle = Font.PLAIN;
 	private Color correctColor = Color.BLACK;
 	private Color incorrectColor = Color.RED;
-	private JTextPane exampleField;
+	private static JTextPane exampleField;
 	private DefaultStyledDocument document;
-	private SpellChecker checker;
+	private static SpellChecker checker;
+	private Serializer serializer;
+	public static Font selected;
 
 	public FontMenu(String name, int width, int height) {
 		// Create a JFrame to hold the panel
@@ -59,6 +62,9 @@ public class FontMenu {
 		frame.setSize(width, height);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+
+		// Create a serializer
+		serializer = new Serializer();
 
 		// Create a document
 		document = new DefaultStyledDocument();
@@ -87,6 +93,8 @@ public class FontMenu {
 				StyleConstants.ALIGN_CENTER);
 		document.setParagraphAttributes(0, document.getLength(), checker
 				.getTextField().getSet(), false);
+
+		selected = new Font(fontType, fontStyle, fontSize);
 
 		setFont();
 
@@ -148,6 +156,7 @@ public class FontMenu {
 		ActionListener buttonListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fontType = e.getActionCommand().toString();
+				selected = new Font(fontType, fontStyle, fontSize);
 				setFont();
 			}
 		};
@@ -190,6 +199,7 @@ public class FontMenu {
 				JSlider slider = (JSlider) e.getSource();
 				fontSize = slider.getValue();
 				sizeLabel.setText("Font Size: " + fontSize);
+				selected = new Font(fontType, fontStyle, fontSize);
 				setFont();
 			}
 		};
@@ -230,6 +240,9 @@ public class FontMenu {
 						Font.BOLD + Font.ITALIC };
 
 				fontStyle = fontItemsInt[comboBox.getSelectedIndex()];
+
+				selected = new Font(fontType, fontStyle, fontSize);
+
 				setFont();
 			}
 		});
@@ -287,6 +300,7 @@ public class FontMenu {
 			public void windowClosing(WindowEvent e) {
 				GUI.textField.setFont(new Font(fontType, fontStyle, fontSize));
 				setColors();
+				serializeOptions();
 			}
 		});
 	}
@@ -294,8 +308,7 @@ public class FontMenu {
 	/**
 	 * Set the font of the exampleField
 	 */
-	private void setFont() {
-		Font selected = new Font(fontType, fontStyle, fontSize);
+	public static void setFont() {
 		exampleField.setFont(selected);
 	}
 
@@ -367,6 +380,39 @@ public class FontMenu {
 		GUI.checker.getTextField().setCorrectColor(correctColor);
 		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
 		GUI.checker.checkTextArea();
+	}
+
+	/**
+	 * Sets the correctColor
+	 * 
+	 * @param correctColor
+	 *            The correct color
+	 */
+	public static void setCorrectColor(Color correctColor) {
+		GUI.checker.getTextField().setCorrectColor(correctColor);
+	}
+
+	/**
+	 * Sets the incorrect color
+	 * 
+	 * @param incorrectColor
+	 *            The incorrect color
+	 */
+	public static void setIncorrectColor(Color incorrectColor) {
+		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
+	}
+
+	/**
+	 * Saves important options to a file
+	 */
+	private void serializeOptions() {
+		serializer.serialize("font", "font", fontType + " " + fontStyle + " "
+				+ fontSize);
+		serializer.serialize("color", "correct", correctColor.getRed() + " "
+				+ correctColor.getGreen() + " " + correctColor.getBlue());
+		serializer.serialize("color", "incorrect",
+				incorrectColor.getRed() + " " + incorrectColor.getGreen() + " "
+						+ incorrectColor.getBlue());
 	}
 
 }

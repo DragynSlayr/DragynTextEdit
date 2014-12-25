@@ -71,24 +71,31 @@ public class SpellChecker {
 	 */
 	public void checkLastWord() {
 		if (textField.getTextBox().getCaretPosition() == textField
-				.getDocument().getLength()) {
+				.getDocument().getLength()
+				&& !textField.getTextBox().getText().endsWith(" ")) {
 			try {
 				String[] split = textField.getTextBox().getText().split(" ");
 				Word word = new Word(split[split.length - 1]);
 				int docLength = textField.getDocument().getLength() + 1;
-				int length = split[split.length - 1].length();
+				int length = split[split.length - 1].length() + 1;
 				StyleConstants.setForeground(textField.getSet(),
 						textField.getCorrectColor());
 				if (word.isWord(dictionary)) {
 					StyleConstants.setForeground(textField.getSet(),
 							textField.getCorrectColor());
-					textField.getDocument().replace((docLength - length) - 1,
-							length, word.getWord(), textField.getSet());
+					textField.getDocument().replace(
+							docLength - length,
+							textField.getTextBox().getCaretPosition()
+									- (docLength - length), word.getWord(),
+							textField.getSet());
 				} else {
 					StyleConstants.setForeground(textField.getSet(),
 							textField.getIncorrectColor());
-					textField.getDocument().replace((docLength - length) - 1,
-							length, word.getWord(), textField.getSet());
+					textField.getDocument().replace(
+							docLength - length,
+							textField.getTextBox().getCaretPosition()
+									- (docLength - length), word.getWord(),
+							textField.getSet());
 				}
 			} catch (BadLocationException ble) {
 				System.out.println("Couldn't replace string");

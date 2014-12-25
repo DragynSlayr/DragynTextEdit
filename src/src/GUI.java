@@ -54,7 +54,7 @@ public class GUI extends JFrame {
 		// Initialize checker
 		checker = new SpellChecker(textField);
 
-		//Set the keyListener of the textField
+		// Set the keyListener of the textField
 		textField.setKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
@@ -70,8 +70,8 @@ public class GUI extends JFrame {
 
 		// Update the components of the window
 		SwingUtilities.updateComponentTreeUI(this);
-		
-		//Adds a custom window listener
+
+		// Adds a custom window listener
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				checkBeforeClosing();
@@ -194,12 +194,25 @@ public class GUI extends JFrame {
 			}
 		});
 
+		// Create an about JMenuItem
+		JMenuItem aboutItem = createJMenuItem("About", KeyEvent.VK_A, "About",
+				null);
+		aboutItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(panel,
+						"Made by Inderpreet Dhillon", "About",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+
 		// Add JMenuItems to JMenu
 		fileMenu.add(saveItem);
 		fileMenu.add(loadItem);
 		fileMenu.add(exitItem);
 		editMenu.add(fontMenuItem);
 		editMenu.add(spellCheckItem);
+		helpMenu.add(aboutItem);
 		helpMenu.add(helpItem);
 
 		// Add Menus to JMenuBar

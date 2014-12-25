@@ -50,8 +50,6 @@ public class FontMenu {
 	private DefaultStyledDocument document;
 	private SpellChecker checker;
 
-	// TODO add the option to pick a color for the correct and incorrect colors
-
 	public FontMenu(String name, int width, int height) {
 		// Create a JFrame to hold the panel
 		JFrame frame = new JFrame(name);

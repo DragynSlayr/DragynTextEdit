@@ -16,6 +16,8 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,9 +40,12 @@ public class FontMenu {
 	private final String FONT_TYPE = "Font Type";
 	private final String FONT_SIZE = "Font Size";
 	private final String FONT_STYLE = "Font Style";
+	private final String FONT_COLOR = "Font Colors";
 	private String fontType = "Serif";
 	private int fontSize = 20;
 	private int fontStyle = Font.PLAIN;
+	private Color correctColor = Color.BLACK;
+	private Color incorrectColor = Color.RED;
 	private JTextPane exampleField;
 	private DefaultStyledDocument document;
 	private SpellChecker checker;
@@ -63,7 +68,7 @@ public class FontMenu {
 		exampleField.setText("Example Text");
 
 		// Initialize spellChecker
-		checker = new SpellChecker(new TextField(Color.BLACK, Color.RED,
+		checker = new SpellChecker(new TextField(correctColor, incorrectColor,
 				exampleField));
 
 		// Add custom keyListener to JTextPane
@@ -98,7 +103,7 @@ public class FontMenu {
 		renderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
 
 		// A list of items that will be present in a JComboBox
-		String[] items = { FONT_TYPE, FONT_SIZE, FONT_STYLE };
+		String[] items = { FONT_TYPE, FONT_SIZE, FONT_STYLE, FONT_COLOR };
 
 		// Create a new JComboBox with the items
 		final JComboBox<String> choices = new JComboBox<String>(items);
@@ -123,6 +128,9 @@ public class FontMenu {
 					break;
 				case FONT_STYLE:
 					cardLayout.show(cards, FONT_STYLE);
+					break;
+				case FONT_COLOR:
+					cardLayout.show(cards, FONT_COLOR);
 					break;
 				}
 			}
@@ -232,6 +240,42 @@ public class FontMenu {
 		// Add typeJPanel to cards with
 		cards.add(typeJPanel, FONT_STYLE);
 
+		// Create color JPanel with GridLayout
+		final JPanel colorPanel = new JPanel(new GridLayout(1, 2));
+
+		JButton correctColorButton = new JButton("Choose Correct Color");
+		correctColorButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				correctColor = JColorChooser.showDialog(colorPanel,
+						"Choose Correct Color", correctColor);
+				if (correctColor != null) {
+					checker.getTextField().setCorrectColor(correctColor);
+					updateTextArea();
+				}
+			}
+		});
+
+		JButton incorrectColorButton = new JButton("Choose Incorrect Color");
+		incorrectColorButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				incorrectColor = JColorChooser.showDialog(colorPanel,
+						"Choose Incorrect Color", incorrectColor);
+				if (incorrectColor != null) {
+					checker.getTextField().setIncorrectColor(incorrectColor);
+					updateTextArea();
+				}
+			}
+		});
+
+		// Add buttons to the color panel
+		colorPanel.add(correctColorButton);
+		colorPanel.add(incorrectColorButton);
+
+		// Add color panel to cards as FONT_COLOR
+		cards.add(colorPanel, FONT_COLOR);
+
 		// Add cards to panel
 		panel.add(cards);
 
@@ -242,6 +286,7 @@ public class FontMenu {
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				GUI.textField.setFont(new Font(fontType, fontStyle, fontSize));
+				setColors();
 			}
 		});
 	}
@@ -306,6 +351,22 @@ public class FontMenu {
 		slider.setPaintLabels(paintLabels);
 		slider.addChangeListener(listener);
 		return slider;
+	}
+
+	/**
+	 * Updates the components of the exampleField
+	 */
+	private void updateTextArea() {
+		checker.checkTextArea();
+	}
+
+	/**
+	 * Sets the colors to be used in the editor
+	 */
+	private void setColors() {
+		GUI.checker.getTextField().setCorrectColor(correctColor);
+		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
+		GUI.checker.checkTextArea();
 	}
 
 }

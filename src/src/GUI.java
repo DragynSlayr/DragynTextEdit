@@ -36,7 +36,7 @@ public class GUI extends JFrame {
 	private boolean savedOnce = false;
 	private File toSave = null;
 	static TextField textField;
-	private SpellChecker checker;
+	static SpellChecker checker;
 	private Color correctColor = Color.BLACK, incorrectColor = Color.RED;
 
 	public GUI() {
@@ -70,6 +70,8 @@ public class GUI extends JFrame {
 
 		// Update the components of the window
 		SwingUtilities.updateComponentTreeUI(this);
+		
+		//Adds a custom window listener
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				checkBeforeClosing();

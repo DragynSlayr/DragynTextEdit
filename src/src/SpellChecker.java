@@ -12,9 +12,9 @@ import javax.swing.text.StyleConstants;
  */
 public class SpellChecker {
 
-	private static ArrayList<String> dictionary;
-	private static TextField textField;
-	private static int errorsFound = 0;
+	private ArrayList<String> dictionary;
+	private TextField textField;
+	private int errorsFound = 0;
 
 	public SpellChecker(TextField textField) {
 		// Creates dictionary
@@ -22,7 +22,7 @@ public class SpellChecker {
 		dictionary = dict.getDictionary();
 
 		// Set textField
-		SpellChecker.textField = textField;
+		this.textField = textField;
 	}
 
 	/**
@@ -46,14 +46,14 @@ public class SpellChecker {
 				}
 				if (words.get(i).isWord(dictionary)) {
 					StyleConstants.setForeground(textField.getSet(),
-							textField.getColor("correct"));
+							textField.getCorrectColor());
 					textField.getDocument().insertString(
 							textField.getDocument().getLength(),
 							words.get(i).getWord() + add, textField.getSet());
 				} else {
 					errorsFound++;
 					StyleConstants.setForeground(textField.getSet(),
-							textField.getColor("incorrect"));
+							textField.getIncorrectColor());
 					textField.getDocument().insertString(
 							textField.getDocument().getLength(),
 							words.get(i).getWord() + add, textField.getSet());
@@ -76,15 +76,15 @@ public class SpellChecker {
 				int docLength = textField.getDocument().getLength() + 1;
 				int length = split[split.length - 1].length();
 				StyleConstants.setForeground(textField.getSet(),
-						textField.getColor("correct"));
+						textField.getCorrectColor());
 				if (word.isWord(dictionary)) {
 					StyleConstants.setForeground(textField.getSet(),
-							textField.getColor("correct"));
+							textField.getCorrectColor());
 					textField.getDocument().replace((docLength - length) - 1,
 							length, word.getWord(), textField.getSet());
 				} else {
 					StyleConstants.setForeground(textField.getSet(),
-							textField.getColor("incorrect"));
+							textField.getIncorrectColor());
 					textField.getDocument().replace((docLength - length) - 1,
 							length, word.getWord(), textField.getSet());
 				}
@@ -102,9 +102,10 @@ public class SpellChecker {
 	public int getErrorsFound() {
 		return errorsFound;
 	}
-	
+
 	/**
 	 * Gets textField
+	 * 
 	 * @return The text field
 	 */
 	public TextField getTextField() {

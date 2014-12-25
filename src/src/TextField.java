@@ -24,11 +24,16 @@ public class TextField {
 	public TextField(Color correctColor, Color incorrectColor, JTextPane pane) {
 		this.textBox = pane;
 
+		// Create a simple attribute set
 		set = new SimpleAttributeSet();
 
+		// Create a document
 		document = (DefaultStyledDocument) pane.getDocument();
 
-		setColors(correctColor, incorrectColor);
+		// Set colors
+		setCorrectColor(correctColor);
+		setIncorrectColor(incorrectColor);
+
 	}
 
 	public TextField(Color correctColor, Color incorrectColor) {
@@ -36,7 +41,8 @@ public class TextField {
 		set = new SimpleAttributeSet();
 
 		// Set colors
-		setColors(correctColor, incorrectColor);
+		setCorrectColor(correctColor);
+		setIncorrectColor(incorrectColor);
 
 		// Create a font
 		font = new Font(Font.SERIF, Font.PLAIN, 20);
@@ -57,45 +63,68 @@ public class TextField {
 	}
 
 	/**
-	 * Sets the colors to be used for the text
+	 * Set the correct color
 	 * 
 	 * @param correctColor
-	 *            The color for correct words
-	 * @param incorrectColor
-	 *            The color for incorrect words
+	 *            The correct color
 	 */
-	public void setColors(Color correctColor, Color incorrectColor) {
+	public void setCorrectColor(Color correctColor) {
 		this.correctColor = correctColor;
+	}
+
+	/**
+	 * Sets the incorrect color
+	 * 
+	 * @param incorrectColor
+	 *            The incorrect color
+	 */
+	public void setIncorrectColor(Color incorrectColor) {
 		this.incorrectColor = incorrectColor;
 	}
 
+	/**
+	 * Get the TextBox
+	 * 
+	 * @return A JTextPane
+	 */
 	public JTextPane getTextBox() {
 		return textBox;
 	}
 
+	/**
+	 * Gets the set
+	 * 
+	 * @return A SimpleAttributeSet
+	 */
 	public SimpleAttributeSet getSet() {
 		return set;
 	}
 
+	/**
+	 * Gets the document
+	 * 
+	 * @return A DefaultStyledDocument
+	 */
 	public DefaultStyledDocument getDocument() {
 		return document;
 	}
 
 	/**
-	 * Gets a color
+	 * Get correct color
 	 * 
-	 * @param name
-	 *            "correct" or "incorrect" are valid
-	 * @return a color
+	 * @return The correct color
 	 */
-	public Color getColor(String name) {
-		if (name.equalsIgnoreCase("correct")) {
-			return correctColor;
-		} else if (name.equalsIgnoreCase("incorrect")) {
-			return incorrectColor;
-		} else {
-			return Color.GRAY;
-		}
+	public Color getCorrectColor() {
+		return correctColor;
+	}
+
+	/**
+	 * Get the incorrect color
+	 * 
+	 * @return The incorrect color
+	 */
+	public Color getIncorrectColor() {
+		return incorrectColor;
 	}
 
 	/**

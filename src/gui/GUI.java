@@ -1,4 +1,4 @@
-package src;
+package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,6 +23,9 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import file.FileOperations;
+import spelling.SpellChecker;
 
 /**
  *

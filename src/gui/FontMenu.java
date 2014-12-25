@@ -1,4 +1,4 @@
-package src;
+package gui;
 
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -29,6 +29,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyleConstants;
+
+import spelling.SpellChecker;
 
 /**
  *

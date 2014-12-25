@@ -1,4 +1,6 @@
-package src;
+package spelling;
+
+import gui.TextField;
 
 import java.util.ArrayList;
 

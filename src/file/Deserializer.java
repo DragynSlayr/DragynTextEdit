@@ -1,6 +1,5 @@
 package file;
 
-import gui.FontMenu;
 import gui.GUI;
 
 import java.awt.Color;
@@ -17,6 +16,9 @@ public class Deserializer {
 		createReader();
 	}
 
+	/**
+	 * Creates a bufferedReader
+	 */
 	private void createReader() {
 		try {
 			reader = new BufferedReader(
@@ -26,6 +28,9 @@ public class Deserializer {
 		}
 	}
 
+	/**
+	 * Gets information back from a file
+	 */
 	public void deserialize() {
 		try {
 			String line;
@@ -36,31 +41,50 @@ public class Deserializer {
 				switch (identifier) {
 				case "color":
 					String[] rgb = split[1].split(" ");
-					int r = Integer.parseInt(rgb[0]);
-					int g = Integer.parseInt(rgb[1]);
-					int b = Integer.parseInt(rgb[2]);
-					Color color = new Color(r, g, b);
+					Color color = getColor(rgb);
 					if (name.equalsIgnoreCase("correct")) {
 						GUI.textField.setCorrectColor(color);
-						FontMenu.setCorrectColor(color);
 					} else {
 						GUI.textField.setIncorrectColor(color);
-						FontMenu.setIncorrectColor(color);
 					}
 					break;
 				case "font":
 					String[] fontInfo = split[1].split(" ");
-					String fontName = fontInfo[0];
-					int fontStyle = Integer.parseInt(fontInfo[1]);
-					int fontSize = Integer.parseInt(fontInfo[2]);
-					Font font = new Font(fontName, fontStyle, fontSize);
+					Font font = getFont(fontInfo);
 					GUI.textField.setFont(font);
-					FontMenu.selected = font;
 					break;
 				}
 			}
 		} catch (Exception e) {
 			System.out.println("Could not deserialize");
 		}
+	}
+
+	/**
+	 * Gets a color from a String array of red, green and blue
+	 * 
+	 * @param rgb
+	 *            The String array of red, green and blue
+	 * @return The color represented by the String array
+	 */
+	private Color getColor(String[] rgb) {
+		int r = Integer.parseInt(rgb[0]);
+		int g = Integer.parseInt(rgb[1]);
+		int b = Integer.parseInt(rgb[2]);
+		return new Color(r, g, b);
+	}
+
+	/**
+	 * Gets a font from a String array of name, style and size
+	 * 
+	 * @param fontInfo
+	 *            The String array of name, style and size
+	 * @return The font represented by the String array
+	 */
+	private Font getFont(String[] fontInfo) {
+		String fontName = fontInfo[0];
+		int fontStyle = Integer.parseInt(fontInfo[1]);
+		int fontSize = Integer.parseInt(fontInfo[2]);
+		return new Font(fontName, fontStyle, fontSize);
 	}
 }

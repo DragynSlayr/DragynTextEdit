@@ -58,6 +58,12 @@ public class TextField {
 		textBox.setForeground(this.correctColor);
 	}
 
+	/**
+	 * Sets the textBox's Key Listener
+	 * 
+	 * @param listener
+	 *            The KeyListener to be set
+	 */
 	public void setKeyListener(KeyListener listener) {
 		textBox.addKeyListener(listener);
 	}

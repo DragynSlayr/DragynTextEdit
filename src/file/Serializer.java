@@ -12,6 +12,9 @@ public class Serializer {
 		createWriter();
 	}
 
+	/**
+	 * Open a bufferedWriter
+	 */
 	private void createWriter() {
 		try {
 			writer = new BufferedWriter(
@@ -21,10 +24,25 @@ public class Serializer {
 		}
 	};
 
-	public void serialize(String identifier, String name, Object value) {
+	/**
+	 * Output formatted data to a file
+	 * 
+	 * @param identifier
+	 *            The data type, eg. color or font
+	 * @param name
+	 *            The name of the data
+	 * @param value
+	 *            The value of the data
+	 * @param newLine
+	 *            Whether to add a new line
+	 */
+	public void serialize(String identifier, String name, Object value,
+			boolean newLine) {
 		try {
 			writer.append(identifier + " " + name + ":" + value);
-			writer.newLine();
+			if (newLine) {
+				writer.newLine();
+			}
 		} catch (Exception e) {
 			System.out.println("Could not serialize");
 		} finally {
@@ -36,6 +54,9 @@ public class Serializer {
 		}
 	}
 
+	/**
+	 * Closes the writer
+	 */
 	public void close() {
 		try {
 			writer.close();

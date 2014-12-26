@@ -44,16 +44,16 @@ public class FontMenu {
 	private final String FONT_SIZE = "Font Size";
 	private final String FONT_STYLE = "Font Style";
 	private final String FONT_COLOR = "Font Colors";
-	private static String fontType = "Serif";
-	private static int fontSize = 20;
-	private static int fontStyle = Font.PLAIN;
+	private String fontType = "Serif";
+	private int fontSize = 20;
+	private int fontStyle = Font.PLAIN;
 	private Color correctColor = Color.BLACK;
 	private Color incorrectColor = Color.RED;
-	private static JTextPane exampleField;
+	private JTextPane exampleField;
 	private DefaultStyledDocument document;
-	private static SpellChecker checker;
+	private SpellChecker checker;
 	private Serializer serializer;
-	public static Font selected;
+	private Font selected;
 
 	public FontMenu(String name, int width, int height) {
 		// Create a JFrame to hold the panel
@@ -162,12 +162,12 @@ public class FontMenu {
 		};
 
 		// Create a RadioButton to represent serif option
-		JRadioButton serifButton = createJRadioButton(serif, true,
-				buttonListener);
+		JRadioButton serifButton = createJRadioButton(serif,
+				fontType.equalsIgnoreCase("Serif"), buttonListener);
 
 		// Create a RadioButton
-		JRadioButton sansSerifButton = createJRadioButton(sansSerif, false,
-				buttonListener);
+		JRadioButton sansSerifButton = createJRadioButton(sansSerif,
+				fontType.equalsIgnoreCase("Sans Serif"), buttonListener);
 
 		// Create a ButtonGroup for the buttons
 		ButtonGroup group = new ButtonGroup();
@@ -308,7 +308,7 @@ public class FontMenu {
 	/**
 	 * Set the font of the exampleField
 	 */
-	public static void setFont() {
+	private void setFont() {
 		exampleField.setFont(selected);
 	}
 
@@ -407,12 +407,12 @@ public class FontMenu {
 	 */
 	private void serializeOptions() {
 		serializer.serialize("font", "font", fontType + " " + fontStyle + " "
-				+ fontSize);
+				+ fontSize, true);
 		serializer.serialize("color", "correct", correctColor.getRed() + " "
-				+ correctColor.getGreen() + " " + correctColor.getBlue());
+				+ correctColor.getGreen() + " " + correctColor.getBlue(), true);
 		serializer.serialize("color", "incorrect",
 				incorrectColor.getRed() + " " + incorrectColor.getGreen() + " "
-						+ incorrectColor.getBlue());
+						+ incorrectColor.getBlue(), false);
 	}
 
 }

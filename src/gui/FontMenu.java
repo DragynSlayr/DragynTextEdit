@@ -14,7 +14,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -22,7 +21,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
@@ -148,37 +146,35 @@ public class FontMenu {
 		panel.add(choices);
 
 		// Create a JPanel for fontType with GridLayout
-		JPanel typePanel = new JPanel(new GridLayout(1, 2));
-		String serif = "Serif";
-		String sansSerif = "Sans Serif";
+		JPanel typePanel = new JPanel(new GridLayout(1, 1));
 
-		// Create custom ActionListener for the buttons
-		ActionListener buttonListener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fontType = e.getActionCommand().toString();
+		// Create a SystemFonts object
+		final SystemFonts sysFonts = new SystemFonts();
+
+		// An array of possible font types
+		String[] fonts = sysFonts.getAvailableFonts();
+
+		// Create a JComboBox for fontTypes with fonts
+		JComboBox<String> fontTypes = new JComboBox<String>(fonts);
+
+		// Set default selection for fontTypes comboBox
+		fontTypes.setSelectedIndex(0);
+
+		// Set renderer to custom cellRenderer
+		fontTypes.setRenderer(renderer);
+
+		fontTypes.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				@SuppressWarnings("unchecked")
+				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
+				fontType = sysFonts.getAvailableFonts()[comboBox
+						.getSelectedIndex()];
 				selected = new Font(fontType, fontStyle, fontSize);
 				setFont();
 			}
-		};
-
-		// Create a RadioButton to represent serif option
-		JRadioButton serifButton = createJRadioButton(serif,
-				fontType.equalsIgnoreCase("Serif"), buttonListener);
-
-		// Create a RadioButton
-		JRadioButton sansSerifButton = createJRadioButton(sansSerif,
-				fontType.equalsIgnoreCase("Sans Serif"), buttonListener);
-
-		// Create a ButtonGroup for the buttons
-		ButtonGroup group = new ButtonGroup();
-
-		// Add the buttons to the ButtonGroup
-		group.add(serifButton);
-		group.add(sansSerifButton);
-
-		// Add the buttons to the TypePanel
-		typePanel.add(serifButton);
-		typePanel.add(sansSerifButton);
+		});
+		// Add the combo box to the panel
+		typePanel.add(fontTypes);
 
 		// Add the typePanel to the cards panel with FONT_TYPE as a name
 		cards.add(typePanel, FONT_TYPE);
@@ -215,43 +211,39 @@ public class FontMenu {
 		// Add sizePanel to cards panel with FONT_SIZE as name
 		cards.add(sizePanel, FONT_SIZE);
 
-		// Create a JPanel for a font types with GridLayout
-		JPanel typeJPanel = new JPanel(new GridLayout(1, 1));
+		// Create a JPanel for a font styles with GridLayout
+		JPanel stylePanel = new JPanel(new GridLayout(1, 1));
 
 		// An array of possible font types
-		String[] fontItems = { "Normal", "Bold", "Italic", "Bold & Italic" };
+		String[] styleItems = { "Normal", "Bold", "Italic", "Bold & Italic" };
 
-		// Create a JComboBox for fontTypes with fontItems
-		JComboBox<String> fontTypes = new JComboBox<String>(fontItems);
+		// Create a JComboBox for fontStyles with fontItems
+		JComboBox<String> fontStyles = new JComboBox<String>(styleItems);
 
 		// Set default selection for fontTypes comboBox
-		fontTypes.setSelectedIndex(0);
+		fontStyles.setSelectedIndex(0);
 
 		// Set renderer to custom cellRenderer
-		fontTypes.setRenderer(renderer);
+		fontStyles.setRenderer(renderer);
 
-		fontTypes.addItemListener(new ItemListener() {
+		fontStyles.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				@SuppressWarnings("unchecked")
 				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
-
-				// An array of ints that represents font types
-				int[] fontItemsInt = { Font.PLAIN, Font.BOLD, Font.ITALIC,
+				// An array of integers that represents font types
+				int[] fontStylesInt = { Font.PLAIN, Font.BOLD, Font.ITALIC,
 						Font.BOLD + Font.ITALIC };
-
-				fontStyle = fontItemsInt[comboBox.getSelectedIndex()];
-
+				fontStyle = fontStylesInt[comboBox.getSelectedIndex()];
 				selected = new Font(fontType, fontStyle, fontSize);
-
 				setFont();
 			}
 		});
 
 		// Add fontTypes to typePanel
-		typeJPanel.add(fontTypes);
+		stylePanel.add(fontStyles);
 
 		// Add typeJPanel to cards with
-		cards.add(typeJPanel, FONT_STYLE);
+		cards.add(stylePanel, FONT_STYLE);
 
 		// Create color JPanel with GridLayout
 		final JPanel colorPanel = new JPanel(new GridLayout(1, 2));
@@ -310,27 +302,6 @@ public class FontMenu {
 	 */
 	private void setFont() {
 		exampleField.setFont(selected);
-	}
-
-	/**
-	 * Creates a JRadioButton
-	 * 
-	 * @param text
-	 *            The String to be displayed on the button
-	 * @param selected
-	 *            Whether the button is selected or not
-	 * @param listener
-	 *            An ActionListener that controls the button
-	 * @return new JRadioButton with attributes
-	 */
-	private JRadioButton createJRadioButton(String text, Boolean selected,
-			ActionListener listener) {
-		JRadioButton button = new JRadioButton(text, selected);
-		button.addActionListener(listener);
-		button.setVerticalTextPosition(JRadioButton.BOTTOM);
-		button.setHorizontalTextPosition(JRadioButton.CENTER);
-		button.setHorizontalAlignment(JRadioButton.CENTER);
-		return button;
 	}
 
 	/**

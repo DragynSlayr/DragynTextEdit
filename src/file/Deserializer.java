@@ -40,7 +40,7 @@ public class Deserializer {
 				String name = split[0].split(" ")[1];
 				switch (identifier) {
 				case "color":
-					String[] rgb = split[1].split(" ");
+					String[] rgb = split[1].split("_");
 					Color color = getColor(rgb);
 					if (name.equalsIgnoreCase("correct")) {
 						GUI.textField.setCorrectColor(color);
@@ -49,7 +49,7 @@ public class Deserializer {
 					}
 					break;
 				case "font":
-					String[] fontInfo = split[1].split(" ");
+					String[] fontInfo = split[1].split("_");
 					Font font = getFont(fontInfo);
 					GUI.textField.setFont(font);
 					break;

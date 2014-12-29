@@ -377,12 +377,12 @@ public class FontMenu {
 	 * Saves important options to a file
 	 */
 	private void serializeOptions() {
-		serializer.serialize("font", "font", fontType + " " + fontStyle + " "
+		serializer.serialize("font", "font", fontType + "_" + fontStyle + "_"
 				+ fontSize, true);
-		serializer.serialize("color", "correct", correctColor.getRed() + " "
-				+ correctColor.getGreen() + " " + correctColor.getBlue(), true);
+		serializer.serialize("color", "correct", correctColor.getRed() + "_"
+				+ correctColor.getGreen() + "_" + correctColor.getBlue(), true);
 		serializer.serialize("color", "incorrect",
-				incorrectColor.getRed() + " " + incorrectColor.getGreen() + " "
+				incorrectColor.getRed() + "_" + incorrectColor.getGreen() + "_"
 						+ incorrectColor.getBlue(), false);
 	}
 

@@ -24,9 +24,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import file.SettingsLoader;
-import file.FileOperations;
 import spelling.SpellChecker;
+import file.FileOperations;
+import file.SettingsLoader;
 
 /**
  *
@@ -71,7 +71,7 @@ public class GUI extends JFrame {
 
 		// Sets up the user interface
 		setupUI();
-		
+
 		// Create a deserializer
 		SettingsLoader settingsLoader = new SettingsLoader();
 		settingsLoader.load();
@@ -305,24 +305,29 @@ public class GUI extends JFrame {
 	 * checks if the user wants to save before exiting
 	 */
 	private void checkBeforeClosing() {
-		int selection = JOptionPane.showConfirmDialog(panel,
-				"Save file before closing?", "Exit Confirmation",
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-		switch (selection) {
-		case JOptionPane.YES_OPTION:
-			JFileChooser fileChooser = new JFileChooser(
-					System.getProperty("user.home") + "//Desktop");
-			fileChooser.setDialogTitle("Save");
-			int userSelection = fileChooser.showSaveDialog(panel);
-			if (userSelection == JFileChooser.APPROVE_OPTION) {
-				toSave = fileChooser.getSelectedFile();
-				fileOps.write(toSave, textField.getTextBox().getText());
+		if (checker.getTextField().getDocument().getLength() > 0) {
+			int selection = JOptionPane.showConfirmDialog(panel,
+					"Save file before closing?", "Exit Confirmation",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			switch (selection) {
+			case JOptionPane.YES_OPTION:
+				JFileChooser fileChooser = new JFileChooser(
+						System.getProperty("user.home") + "//Desktop");
+				fileChooser.setDialogTitle("Save");
+				int userSelection = fileChooser.showSaveDialog(panel);
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+					toSave = fileChooser.getSelectedFile();
+					fileOps.write(toSave, textField.getTextBox().getText());
+				}
+			case JOptionPane.NO_OPTION:
+				System.exit(0);
+				break;
+			default:
+				break;
 			}
-		case JOptionPane.NO_OPTION:
+		} else {
 			System.exit(0);
-			break;
-		default:
-			break;
 		}
 	}
 

@@ -4,11 +4,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-public class Serializer {
+public class SettingsSaver {
 
 	private BufferedWriter writer;
+	public static final String SEPARATOR = " ";
+	public static final String ASSIGNER = " = ";
+	public static final String FONT_TYPE = "Font Type";
+	public static final String FONT_SIZE = "Font Size";
+	public static final String FONT_STYLE = "Font Style";
+	public static final String CORRECT_COLOR = "Correct Color";
+	public static final String INCORRECT_COLOR = "Incorrect Color";
 
-	public Serializer() {
+	public SettingsSaver() {
 		createWriter();
 	}
 
@@ -20,15 +27,13 @@ public class Serializer {
 			writer = new BufferedWriter(
 					new FileWriter(new File("settings.cfg")));
 		} catch (Exception e) {
-			System.out.println("Could not create serializer");
+			System.out.println("Could not create saver");
 		}
 	};
 
 	/**
 	 * Output formatted data to a file
 	 * 
-	 * @param identifier
-	 *            The data type, eg. color or font
 	 * @param name
 	 *            The name of the data
 	 * @param value
@@ -36,15 +41,14 @@ public class Serializer {
 	 * @param newLine
 	 *            Whether to add a new line
 	 */
-	public void serialize(String identifier, String name, Object value,
-			boolean newLine) {
+	public void format(String name, Object value, boolean newLine) {
 		try {
-			writer.append(identifier + " " + name + ":" + value);
+			writer.append(name + ASSIGNER + value);
 			if (newLine) {
 				writer.newLine();
 			}
 		} catch (Exception e) {
-			System.out.println("Could not serialize");
+			System.out.println("Could not save");
 		} finally {
 			try {
 				writer.flush();
@@ -61,7 +65,7 @@ public class Serializer {
 		try {
 			writer.close();
 		} catch (Exception e) {
-			System.out.println("Could not close serializer");
+			System.out.println("Could not close saver");
 		}
 	}
 }

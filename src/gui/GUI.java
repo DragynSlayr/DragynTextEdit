@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import file.Deserializer;
+import file.SettingsLoader;
 import file.FileOperations;
 import spelling.SpellChecker;
 
@@ -71,6 +71,10 @@ public class GUI extends JFrame {
 
 		// Sets up the user interface
 		setupUI();
+		
+		// Create a deserializer
+		SettingsLoader settingsLoader = new SettingsLoader();
+		settingsLoader.load();
 
 		// Update the components of the window
 		SwingUtilities.updateComponentTreeUI(this);
@@ -81,10 +85,6 @@ public class GUI extends JFrame {
 				checkBeforeClosing();
 			}
 		});
-		
-		// Create a deserializer
-		Deserializer deserializer = new Deserializer();
-		deserializer.deserialize();
 	}
 
 	/**

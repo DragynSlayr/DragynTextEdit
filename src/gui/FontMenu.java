@@ -29,7 +29,7 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyleConstants;
 
 import spelling.SpellChecker;
-import file.Serializer;
+import file.SettingsSaver;
 
 /**
  *
@@ -50,7 +50,7 @@ public class FontMenu {
 	private JTextPane exampleField;
 	private DefaultStyledDocument document;
 	private SpellChecker checker;
-	private Serializer serializer;
+	private SettingsSaver settingsSaver;
 	private Font selected;
 
 	public FontMenu(String name, int width, int height) {
@@ -61,8 +61,8 @@ public class FontMenu {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
-		// Create a serializer
-		serializer = new Serializer();
+		// Create a settingsSaver
+		settingsSaver = new SettingsSaver();
 
 		// Create a document
 		document = new DefaultStyledDocument();
@@ -292,7 +292,7 @@ public class FontMenu {
 			public void windowClosing(WindowEvent e) {
 				GUI.textField.setFont(new Font(fontType, fontStyle, fontSize));
 				setColors();
-				serializeOptions();
+				saveOptions();
 			}
 		});
 	}
@@ -376,13 +376,16 @@ public class FontMenu {
 	/**
 	 * Saves important options to a file
 	 */
-	private void serializeOptions() {
-		serializer.serialize("font", "font", fontType + "_" + fontStyle + "_"
-				+ fontSize, true);
-		serializer.serialize("color", "correct", correctColor.getRed() + "_"
-				+ correctColor.getGreen() + "_" + correctColor.getBlue(), true);
-		serializer.serialize("color", "incorrect",
-				incorrectColor.getRed() + "_" + incorrectColor.getGreen() + "_"
+	private void saveOptions() {
+		settingsSaver.format(SettingsSaver.FONT_TYPE, fontType, true);
+		settingsSaver.format(SettingsSaver.FONT_SIZE, fontSize, true);
+		settingsSaver.format(SettingsSaver.FONT_STYLE, fontStyle, true);
+		settingsSaver.format(SettingsSaver.CORRECT_COLOR, correctColor.getRed()
+				+ SettingsSaver.SEPARATOR + correctColor.getGreen()
+				+ SettingsSaver.SEPARATOR + correctColor.getBlue(), true);
+		settingsSaver.format(SettingsSaver.INCORRECT_COLOR,
+				incorrectColor.getRed() + SettingsSaver.SEPARATOR
+						+ incorrectColor.getGreen() + SettingsSaver.SEPARATOR
 						+ incorrectColor.getBlue(), false);
 	}
 

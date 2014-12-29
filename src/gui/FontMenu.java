@@ -13,6 +13,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -42,11 +43,11 @@ public class FontMenu {
 	private final String FONT_SIZE = "Font Size";
 	private final String FONT_STYLE = "Font Style";
 	private final String FONT_COLOR = "Font Colors";
-	private String fontType = "Serif";
-	private int fontSize = 20;
-	private int fontStyle = Font.PLAIN;
-	private Color correctColor = Color.BLACK;
-	private Color incorrectColor = Color.RED;
+	public static String fontType = "Serif";
+	public static int fontSize = 20;
+	public static int fontStyle = Font.PLAIN;
+	public static Color correctColor = Color.BLACK;
+	public static Color incorrectColor = Color.RED;
 	private JTextPane exampleField;
 	private DefaultStyledDocument document;
 	private SpellChecker checker;
@@ -69,11 +70,15 @@ public class FontMenu {
 
 		// Create an editable JTextField to show changes in font
 		exampleField = new JTextPane(document);
-		exampleField.setText("Example Text");
+		exampleField.setText("Example Tetx");
 
 		// Initialize spellChecker
 		checker = new SpellChecker(new TextField(correctColor, incorrectColor,
 				exampleField));
+
+		checker.getTextField().setCorrectColor(correctColor);
+		checker.getTextField().setIncorrectColor(incorrectColor);
+		updateTextArea();
 
 		// Add custom keyListener to JTextPane
 		exampleField.addKeyListener(new KeyAdapter() {
@@ -153,12 +158,13 @@ public class FontMenu {
 
 		// An array of possible font types
 		String[] fonts = sysFonts.getAvailableFonts();
+		int fontTypeIndex = Arrays.binarySearch(fonts, fontType);
 
 		// Create a JComboBox for fontTypes with fonts
 		JComboBox<String> fontTypes = new JComboBox<String>(fonts);
 
 		// Set default selection for fontTypes comboBox
-		fontTypes.setSelectedIndex(0);
+		fontTypes.setSelectedIndex(fontTypeIndex);
 
 		// Set renderer to custom cellRenderer
 		fontTypes.setRenderer(renderer);
@@ -201,7 +207,7 @@ public class FontMenu {
 		};
 
 		// Create a size JSlider
-		JSlider sizeSlider = createSlider(10, 100, 20, 10, 5, true, true,
+		JSlider sizeSlider = createSlider(10, 100, fontSize, 10, 5, true, true,
 				sliderListener);
 
 		// Add sizeLabel and sizeSlider to sizePanel
@@ -217,11 +223,18 @@ public class FontMenu {
 		// An array of possible font types
 		String[] styleItems = { "Normal", "Bold", "Italic", "Bold & Italic" };
 
+		// An array of integers that represents font types
+		final int[] fontStylesInt = { Font.PLAIN, Font.BOLD, Font.ITALIC,
+				Font.BOLD + Font.ITALIC };
+
+		// Get the index of the selected style
+		int fontStyleIndex = slowSearch(fontStyle, fontStylesInt);
+
 		// Create a JComboBox for fontStyles with fontItems
 		JComboBox<String> fontStyles = new JComboBox<String>(styleItems);
 
 		// Set default selection for fontTypes comboBox
-		fontStyles.setSelectedIndex(0);
+		fontStyles.setSelectedIndex(fontStyleIndex);
 
 		// Set renderer to custom cellRenderer
 		fontStyles.setRenderer(renderer);
@@ -230,9 +243,6 @@ public class FontMenu {
 			public void itemStateChanged(ItemEvent e) {
 				@SuppressWarnings("unchecked")
 				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
-				// An array of integers that represents font types
-				int[] fontStylesInt = { Font.PLAIN, Font.BOLD, Font.ITALIC,
-						Font.BOLD + Font.ITALIC };
 				fontStyle = fontStylesInt[comboBox.getSelectedIndex()];
 				selected = new Font(fontType, fontStyle, fontSize);
 				setFont();
@@ -389,4 +399,23 @@ public class FontMenu {
 						+ incorrectColor.getBlue(), false);
 	}
 
+	/**
+	 * Gets the index of the key in the array
+	 * 
+	 * @param key
+	 *            The value to search for
+	 * @param array
+	 *            The array to search in
+	 * @return Index if found, -1 otherwise
+	 */
+	private int slowSearch(int key, int[] array) {
+		int index = -1;
+		for (int i = 0; i < array.length; i++) {
+			if (key == array[i]) {
+				index = i;
+				break;
+			}
+		}
+		return index;
+	}
 }

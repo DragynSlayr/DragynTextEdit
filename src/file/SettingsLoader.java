@@ -1,5 +1,6 @@
 package file;
 
+import gui.FontMenu;
 import gui.GUI;
 
 import java.awt.Color;
@@ -42,14 +43,17 @@ public class SettingsLoader {
 				switch (name) {
 				case SettingsSaver.FONT_TYPE:
 					fontType = split[1];
+					FontMenu.fontType = split[1];
 					setFont();
 					break;
 				case SettingsSaver.FONT_SIZE:
 					fontSize = Integer.parseInt(split[1]);
+					FontMenu.fontSize = Integer.parseInt(split[1]);
 					setFont();
 					break;
 				case SettingsSaver.FONT_STYLE:
 					fontStyle = Integer.parseInt(split[1]);
+					FontMenu.fontStyle = Integer.parseInt(split[1]);
 					setFont();
 					break;
 				case SettingsSaver.CORRECT_COLOR:
@@ -57,12 +61,14 @@ public class SettingsLoader {
 							.split(SettingsSaver.SEPARATOR);
 					Color correctColor = getColor(correctRGB);
 					GUI.textField.setCorrectColor(correctColor);
+					FontMenu.correctColor = correctColor;
 					break;
 				case SettingsSaver.INCORRECT_COLOR:
 					String[] incorrectRGB = split[1]
 							.split(SettingsSaver.SEPARATOR);
 					Color incorrectColor = getColor(incorrectRGB);
 					GUI.textField.setIncorrectColor(incorrectColor);
+					FontMenu.incorrectColor = incorrectColor;
 					break;
 				default:
 					break;

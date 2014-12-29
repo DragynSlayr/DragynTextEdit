@@ -3,6 +3,7 @@ package gui;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SystemFonts {
 
@@ -11,6 +12,7 @@ public class SystemFonts {
 	public SystemFonts() {
 		fonts = getFonts();
 		fonts = cleanFonts(fonts);
+		Arrays.sort(fonts);
 	}
 
 	public String[] getAvailableFonts() {

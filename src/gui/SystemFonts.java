@@ -15,10 +15,18 @@ public class SystemFonts {
 		Arrays.sort(fonts);
 	}
 
+	/**
+	 * Gets fonts
+	 * @return Allowed fonts
+	 */
 	public String[] getAvailableFonts() {
 		return fonts;
 	}
 
+	/**
+	 * Gets all fonts on the system
+	 * @return Fonts on the system
+	 */
 	private String[] getFonts() {
 		Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
 				.getAllFonts();
@@ -31,6 +39,11 @@ public class SystemFonts {
 		return listToArray(fontFamilies);
 	}
 
+	/**
+	 * Removes duplicates from a list
+	 * @param fontNames The array to clean
+	 * @return A cleaned array
+	 */
 	private String[] cleanFonts(String[] fontNames) {
 		ArrayList<String> cleanFonts = new ArrayList<String>();
 		for (String s : fontNames) {
@@ -41,6 +54,11 @@ public class SystemFonts {
 		return listToArray(cleanFonts);
 	}
 
+	/**
+	 * Converts list to array
+	 * @param arrayList The list to convert
+	 * @return An array
+	 */
 	private String[] listToArray(ArrayList<String> arrayList) {
 		String[] array = new String[arrayList.size()];
 		arrayList.toArray(array);

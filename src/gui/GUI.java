@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -44,11 +46,14 @@ public class GUI extends JFrame {
 	private Color correctColor = Color.BLACK, incorrectColor = Color.RED;
 
 	public GUI() {
+		// Get the size of the screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
 		// Set the basics of the frame
-		super("Dragyn TextEdit");
+		setTitle("Dragyn TextEdit");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(true);
-		setSize(500, 500);
+		setSize(screenSize.width / 2, screenSize.height / 2);
 		setVisible(true);
 		setLocationRelativeTo(null);
 

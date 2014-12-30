@@ -24,7 +24,9 @@ public class SystemFonts {
 				.getAllFonts();
 		ArrayList<String> fontFamilies = new ArrayList<String>();
 		for (Font f : fonts) {
-			fontFamilies.add(f.getFamily());
+			if (f.getNumGlyphs() > 227) {
+				fontFamilies.add(f.getFamily());
+			}
 		}
 		return listToArray(fontFamilies);
 	}

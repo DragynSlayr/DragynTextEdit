@@ -16,7 +16,25 @@ public class SystemFonts {
 	}
 
 	/**
+	 * Removes duplicates from a list
+	 * 
+	 * @param fontNames
+	 *            The array to clean
+	 * @return A cleaned array
+	 */
+	private String[] cleanFonts(String[] fontNames) {
+		ArrayList<String> cleanFonts = new ArrayList<String>();
+		for (String s : fontNames) {
+			if (!cleanFonts.contains(s)) {
+				cleanFonts.add(s);
+			}
+		}
+		return listToArray(cleanFonts);
+	}
+
+	/**
 	 * Gets fonts
+	 * 
 	 * @return Allowed fonts
 	 */
 	public String[] getAvailableFonts() {
@@ -25,6 +43,7 @@ public class SystemFonts {
 
 	/**
 	 * Gets all fonts on the system
+	 * 
 	 * @return Fonts on the system
 	 */
 	private String[] getFonts() {
@@ -40,23 +59,10 @@ public class SystemFonts {
 	}
 
 	/**
-	 * Removes duplicates from a list
-	 * @param fontNames The array to clean
-	 * @return A cleaned array
-	 */
-	private String[] cleanFonts(String[] fontNames) {
-		ArrayList<String> cleanFonts = new ArrayList<String>();
-		for (String s : fontNames) {
-			if (!cleanFonts.contains(s)) {
-				cleanFonts.add(s);
-			}
-		}
-		return listToArray(cleanFonts);
-	}
-
-	/**
 	 * Converts list to array
-	 * @param arrayList The list to convert
+	 * 
+	 * @param arrayList
+	 *            The list to convert
 	 * @return An array
 	 */
 	private String[] listToArray(ArrayList<String> arrayList) {

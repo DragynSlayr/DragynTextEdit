@@ -24,6 +24,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultStyledDocument;
@@ -38,26 +40,48 @@ import file.SettingsSaver;
  */
 public class FontMenu {
 
+	public static Color correctColor = Color.BLACK;
+
+	public static int fontSize = 20;
+
+	public static int fontStyle = Font.PLAIN;
+	public static String fontType = "Serif";
+	public static Color incorrectColor = Color.RED;
+	/**
+	 * Sets the correctColor
+	 * 
+	 * @param correctColor
+	 *            The correct color
+	 */
+	public static void setCorrectColor(Color correctColor) {
+		GUI.checker.getTextField().setCorrectColor(correctColor);
+	}
+	/**
+	 * Sets the incorrect color
+	 * 
+	 * @param incorrectColor
+	 *            The incorrect color
+	 */
+	public static void setIncorrectColor(Color incorrectColor) {
+		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
+	}
 	private JPanel cards;
-	private final String FONT_TYPE = "Font Type";
+	private SpellChecker checker;
+	private DefaultStyledDocument document;
+	private JTextPane exampleField;
+	private final String FONT_COLOR = "Font Colors";
 	private final String FONT_SIZE = "Font Size";
 	private final String FONT_STYLE = "Font Style";
-	private final String FONT_COLOR = "Font Colors";
-	public static String fontType = "Serif";
-	public static int fontSize = 20;
-	public static int fontStyle = Font.PLAIN;
-	public static Color correctColor = Color.BLACK;
-	public static Color incorrectColor = Color.RED;
-	private JTextPane exampleField;
-	private DefaultStyledDocument document;
-	private SpellChecker checker;
-	private SettingsSaver settingsSaver;
+	private final String FONT_TYPE = "Font Type";
+
 	private Font selected;
+
+	private SettingsSaver settingsSaver;
 
 	public FontMenu(String name, int width, int height) {
 		// Create a JFrame to hold the panel
 		JFrame frame = new JFrame(name);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setSize(width, height);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
@@ -82,6 +106,7 @@ public class FontMenu {
 
 		// Add custom keyListener to JTextPane
 		exampleField.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_SPACE:
@@ -111,7 +136,7 @@ public class FontMenu {
 		// Create a cell render to modify the horizontal alignment of some
 		// components
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
-		renderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
+		renderer.setHorizontalAlignment(SwingConstants.CENTER);
 
 		// A list of items that will be present in a JComboBox
 		String[] items = { FONT_TYPE, FONT_SIZE, FONT_STYLE, FONT_COLOR };
@@ -127,6 +152,7 @@ public class FontMenu {
 
 		// Add an actionListener to the JComboBox
 		choices.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String a = choices.getSelectedItem().toString();
 				CardLayout cardLayout = (CardLayout) cards.getLayout();
@@ -170,6 +196,7 @@ public class FontMenu {
 		fontTypes.setRenderer(renderer);
 
 		fontTypes.addItemListener(new ItemListener() {
+			@Override
 			public void itemStateChanged(ItemEvent e) {
 				@SuppressWarnings("unchecked")
 				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
@@ -192,7 +219,7 @@ public class FontMenu {
 		final JLabel sizeLabel = new JLabel("Font Size: " + fontSize);
 
 		// Set Horizontal alignment of the sizeLabel
-		sizeLabel.setHorizontalAlignment(JLabel.CENTER);
+		sizeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		// Create a custom ChangeListener for the JSlider
 		ChangeListener sliderListener = new ChangeListener() {
@@ -240,6 +267,7 @@ public class FontMenu {
 		fontStyles.setRenderer(renderer);
 
 		fontStyles.addItemListener(new ItemListener() {
+			@Override
 			public void itemStateChanged(ItemEvent e) {
 				@SuppressWarnings("unchecked")
 				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
@@ -299,19 +327,13 @@ public class FontMenu {
 
 		// Add custom windowListener to frame
 		frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				GUI.textField.setFont(new Font(fontType, fontStyle, fontSize));
 				setColors();
 				saveOptions();
 			}
 		});
-	}
-
-	/**
-	 * Set the font of the exampleField
-	 */
-	private void setFont() {
-		exampleField.setFont(selected);
 	}
 
 	/**
@@ -348,42 +370,6 @@ public class FontMenu {
 	}
 
 	/**
-	 * Updates the components of the exampleField
-	 */
-	private void updateTextArea() {
-		checker.checkTextArea();
-	}
-
-	/**
-	 * Sets the colors to be used in the editor
-	 */
-	private void setColors() {
-		GUI.checker.getTextField().setCorrectColor(correctColor);
-		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
-		GUI.checker.checkTextArea();
-	}
-
-	/**
-	 * Sets the correctColor
-	 * 
-	 * @param correctColor
-	 *            The correct color
-	 */
-	public static void setCorrectColor(Color correctColor) {
-		GUI.checker.getTextField().setCorrectColor(correctColor);
-	}
-
-	/**
-	 * Sets the incorrect color
-	 * 
-	 * @param incorrectColor
-	 *            The incorrect color
-	 */
-	public static void setIncorrectColor(Color incorrectColor) {
-		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
-	}
-
-	/**
 	 * Saves important options to a file
 	 */
 	private void saveOptions() {
@@ -397,6 +383,22 @@ public class FontMenu {
 				incorrectColor.getRed() + SettingsSaver.SEPARATOR
 						+ incorrectColor.getGreen() + SettingsSaver.SEPARATOR
 						+ incorrectColor.getBlue(), false);
+	}
+
+	/**
+	 * Sets the colors to be used in the editor
+	 */
+	private void setColors() {
+		GUI.checker.getTextField().setCorrectColor(correctColor);
+		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
+		GUI.checker.checkTextArea();
+	}
+
+	/**
+	 * Set the font of the exampleField
+	 */
+	private void setFont() {
+		exampleField.setFont(selected);
 	}
 
 	/**
@@ -417,5 +419,12 @@ public class FontMenu {
 			}
 		}
 		return index;
+	}
+
+	/**
+	 * Updates the components of the exampleField
+	 */
+	private void updateTextArea() {
+		checker.checkTextArea();
 	}
 }

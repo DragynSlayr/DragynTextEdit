@@ -13,10 +13,20 @@ public class Word {
 			"<", ">", "\"", "â€œ", "â€�", "â€˜", "â€™", "{", "}", "[", "]",
 			"|", "\\", "(", ")", "!", "@", "#", "$", "%", "^", "&", "*", "-",
 			"+", "=", "_", "~", "`", "\n",
-			System.getProperty("line.separator"), " ", "", "	", "\r", "	", "\\r", "\\t", "\\n"};
+			System.getProperty("line.separator"), " ", "", "	", "\r", "	",
+			"\\r", "\\t", "\\n" };
 
 	public Word(String term) {
 		input = term;
+	}
+
+	/**
+	 * Gets the word
+	 *
+	 * @return String word
+	 */
+	public String getWord() {
+		return input;
 	}
 
 	/**
@@ -29,15 +39,6 @@ public class Word {
 	public boolean isWord(ArrayList<String> dictionary) {
 		String fixed = removeSpecial();
 		return (dictionary.contains(fixed.toLowerCase()));
-	}
-
-	/**
-	 * Gets the word
-	 *
-	 * @return String word
-	 */
-	public String getWord() {
-		return input;
 	}
 
 	/**

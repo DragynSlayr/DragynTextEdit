@@ -15,8 +15,8 @@ import javax.swing.text.StyleConstants;
 public class SpellChecker {
 
 	private ArrayList<String> dictionary;
-	private TextField textField;
 	private int errorsFound = 0;
+	private TextField textField;
 
 	public SpellChecker(TextField textField) {
 		// Creates dictionary
@@ -25,6 +25,43 @@ public class SpellChecker {
 
 		// Set textField
 		this.textField = textField;
+	}
+
+	/**
+	 * Checks the spelling of the last word
+	 */
+	public void checkLastWord() {
+		if (textField.getTextBox().getCaretPosition() == textField
+				.getDocument().getLength()
+				&& !textField.getTextBox().getText().endsWith(" ")) {
+			try {
+				String[] split = textField.getTextBox().getText().split(" ");
+				Word word = new Word(split[split.length - 1]);
+				int docLength = textField.getDocument().getLength() + 1;
+				int length = split[split.length - 1].length() + 1;
+				StyleConstants.setForeground(textField.getSet(),
+						textField.getCorrectColor());
+				if (word.isWord(dictionary)) {
+					StyleConstants.setForeground(textField.getSet(),
+							textField.getCorrectColor());
+					textField.getDocument().replace(
+							docLength - length,
+							textField.getTextBox().getCaretPosition()
+									- (docLength - length), word.getWord(),
+							textField.getSet());
+				} else {
+					StyleConstants.setForeground(textField.getSet(),
+							textField.getIncorrectColor());
+					textField.getDocument().replace(
+							docLength - length,
+							textField.getTextBox().getCaretPosition()
+									- (docLength - length), word.getWord(),
+							textField.getSet());
+				}
+			} catch (BadLocationException ble) {
+				System.out.println("Couldn't replace string");
+			}
+		}
 	}
 
 	/**
@@ -63,43 +100,6 @@ public class SpellChecker {
 			}
 		} catch (BadLocationException ble) {
 			System.out.println("Couldn't insert string");
-		}
-	}
-
-	/**
-	 * Checks the spelling of the last word
-	 */
-	public void checkLastWord() {
-		if (textField.getTextBox().getCaretPosition() == textField
-				.getDocument().getLength()
-				&& !textField.getTextBox().getText().endsWith(" ")) {
-			try {
-				String[] split = textField.getTextBox().getText().split(" ");
-				Word word = new Word(split[split.length - 1]);
-				int docLength = textField.getDocument().getLength() + 1;
-				int length = split[split.length - 1].length() + 1;
-				StyleConstants.setForeground(textField.getSet(),
-						textField.getCorrectColor());
-				if (word.isWord(dictionary)) {
-					StyleConstants.setForeground(textField.getSet(),
-							textField.getCorrectColor());
-					textField.getDocument().replace(
-							docLength - length,
-							textField.getTextBox().getCaretPosition()
-									- (docLength - length), word.getWord(),
-							textField.getSet());
-				} else {
-					StyleConstants.setForeground(textField.getSet(),
-							textField.getIncorrectColor());
-					textField.getDocument().replace(
-							docLength - length,
-							textField.getTextBox().getCaretPosition()
-									- (docLength - length), word.getWord(),
-							textField.getSet());
-				}
-			} catch (BadLocationException ble) {
-				System.out.println("Couldn't replace string");
-			}
 		}
 	}
 

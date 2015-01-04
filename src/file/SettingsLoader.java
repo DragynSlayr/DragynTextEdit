@@ -11,9 +11,9 @@ import java.io.FileReader;
 
 public class SettingsLoader {
 
-	private BufferedReader reader;
-	private String fontType = "Times New Roman";
 	private int fontSize = 20, fontStyle = Font.PLAIN;
+	private String fontType = "Times New Roman";
+	private BufferedReader reader;
 
 	public SettingsLoader() {
 		createReader();
@@ -29,6 +29,20 @@ public class SettingsLoader {
 		} catch (Exception e) {
 			System.out.println("Could not create loader");
 		}
+	}
+
+	/**
+	 * Gets a color from a String array of red, green and blue
+	 * 
+	 * @param rgb
+	 *            The String array of red, green and blue
+	 * @return The color represented by the String array
+	 */
+	private Color getColor(String[] rgb) {
+		int r = Integer.parseInt(rgb[0]);
+		int g = Integer.parseInt(rgb[1]);
+		int b = Integer.parseInt(rgb[2]);
+		return new Color(r, g, b);
 	}
 
 	/**
@@ -77,20 +91,6 @@ public class SettingsLoader {
 		} catch (Exception e) {
 			System.out.println("Could not load");
 		}
-	}
-
-	/**
-	 * Gets a color from a String array of red, green and blue
-	 * 
-	 * @param rgb
-	 *            The String array of red, green and blue
-	 * @return The color represented by the String array
-	 */
-	private Color getColor(String[] rgb) {
-		int r = Integer.parseInt(rgb[0]);
-		int g = Integer.parseInt(rgb[1]);
-		int b = Integer.parseInt(rgb[2]);
-		return new Color(r, g, b);
 	}
 
 	/**

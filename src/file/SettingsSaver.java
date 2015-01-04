@@ -6,18 +6,29 @@ import java.io.FileWriter;
 
 public class SettingsSaver {
 
-	private BufferedWriter writer;
-	public static final String SEPARATOR = " ";
 	public static final String ASSIGNER = " = ";
-	public static final String FONT_TYPE = "Font Type";
+	public static final String CORRECT_COLOR = "Correct Color";
 	public static final String FONT_SIZE = "Font Size";
 	public static final String FONT_STYLE = "Font Style";
-	public static final String CORRECT_COLOR = "Correct Color";
+	public static final String FONT_TYPE = "Font Type";
 	public static final String INCORRECT_COLOR = "Incorrect Color";
+	public static final String SEPARATOR = " ";
+	private BufferedWriter writer;
 
 	public SettingsSaver() {
 		createWriter();
 	}
+
+	/**
+	 * Closes the writer
+	 */
+	public void close() {
+		try {
+			writer.close();
+		} catch (Exception e) {
+			System.out.println("Could not close saver");
+		}
+	};
 
 	/**
 	 * Open a bufferedWriter
@@ -29,7 +40,7 @@ public class SettingsSaver {
 		} catch (Exception e) {
 			System.out.println("Could not create saver");
 		}
-	};
+	}
 
 	/**
 	 * Output formatted data to a file
@@ -55,17 +66,6 @@ public class SettingsSaver {
 			} catch (Exception e) {
 				System.out.println("Could not flush");
 			}
-		}
-	}
-
-	/**
-	 * Closes the writer
-	 */
-	public void close() {
-		try {
-			writer.close();
-		} catch (Exception e) {
-			System.out.println("Could not close saver");
 		}
 	}
 }

@@ -22,6 +22,23 @@ public class Dictionary {
 	}
 
 	/**
+	 * Gets the dictionary
+	 *
+	 * @return the dictionary
+	 */
+	public ArrayList<String> getDictionary() {
+		return dictionary;
+	}
+
+	/**
+	 * Initializes the reader variable
+	 */
+	private void initializeReader() {
+		InputStream input = getClass().getResourceAsStream("dict.txt");
+		reader = new BufferedReader(new InputStreamReader(input));
+	}
+
+	/**
 	 * Reads strings from a file
 	 *
 	 * @return ArrayList the list of words from the file
@@ -35,22 +52,5 @@ public class Dictionary {
 		} catch (IOException ex) {
 			System.out.println("Could not load dictionary");
 		}
-	}
-
-	/**
-	 * Initializes the reader variable
-	 */
-	private void initializeReader() {
-		InputStream input = getClass().getResourceAsStream("dict.txt");
-		reader = new BufferedReader(new InputStreamReader(input));
-	}
-
-	/**
-	 * Gets the dictionary
-	 *
-	 * @return the dictionary
-	 */
-	public ArrayList<String> getDictionary() {
-		return dictionary;
 	}
 }

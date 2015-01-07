@@ -43,6 +43,7 @@ public class GUI extends JFrame {
 	public static SpellChecker checker;
 
 	public static TextField textField;
+
 	/**
 	 * Creates a new JMenu
 	 *
@@ -57,6 +58,7 @@ public class GUI extends JFrame {
 		menu.setMnemonic(mnemonic);
 		return menu;
 	}
+
 	private Color correctColor = Color.BLACK, incorrectColor = Color.RED;
 	private final FileOperations fileOps = new FileOperations();
 	private JPanel panel;

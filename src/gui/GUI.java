@@ -12,7 +12,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -71,7 +73,7 @@ public class GUI extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		// Declare the icon that is used for the window
-		ImageIcon icon = new ImageIcon("icon.jpg");
+		ImageIcon icon = loadIcon("icon.jpg");
 		Image image = icon.getImage();
 
 		// Set the basics of the frame
@@ -169,6 +171,24 @@ public class GUI extends JFrame {
 		menuItem.setToolTipText(tooltip);
 		menuItem.setAccelerator(keyStroke);
 		return menuItem;
+	}
+	
+	/**
+	 * Loads an icon
+	 * 
+	 * @param icon
+	 *            The path to the icon
+	 * @return The icon
+	 */
+	private ImageIcon loadIcon(String icon) {
+		try {
+			InputStream input = getClass()
+					.getResourceAsStream(icon);
+			return new ImageIcon(ImageIO.read(input));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
 	}
 
 	/**

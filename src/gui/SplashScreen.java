@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.Graphics;
-import java.io.File;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -65,7 +65,9 @@ public class SplashScreen {
 	 */
 	private ImageIcon loadIcon(String icon) {
 		try {
-			return new ImageIcon(ImageIO.read(new File(icon)));
+			InputStream input = getClass()
+					.getResourceAsStream(icon);
+			return new ImageIcon(ImageIO.read(input));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

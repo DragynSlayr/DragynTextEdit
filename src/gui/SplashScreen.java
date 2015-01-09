@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,10 +33,10 @@ public class SplashScreen {
 
 		// Set the basics of the frame
 		frame.setTitle("Made By Inderpreet Dhillon");
+		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setSize(icon.getIconWidth(), icon.getIconHeight());
-		frame.setUndecorated(true);
 		frame.setLocationRelativeTo(null);
 		frame.setAlwaysOnTop(true);
 		frame.setIconImage(icon.getImage());
@@ -43,7 +44,13 @@ public class SplashScreen {
 
 		// Create a new JLabel to display the image
 		splash = new JLabel();
-		
+
+		// Set opacity of the splash label
+		splash.setOpaque(false);
+
+		// Set the background color of the label
+		splash.setBackground(new Color(0, 0, 0, 0));
+
 		// Add the image to the JLabel
 		splash.setIcon(icon);
 
@@ -63,6 +70,7 @@ public class SplashScreen {
 	 */
 	public void display() {
 		frame.add(splash);
+		frame.setBackground(new Color(0, 0, 0, 0));
 		frame.paintAll(g);
 	}
 

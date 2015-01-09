@@ -17,9 +17,9 @@ import javax.swing.WindowConstants;
 
 public class SplashScreen {
 
-	JLabel splash;
-	Graphics g;
 	JFrame frame;
+	Graphics g;
+	JLabel splash;
 
 	public SplashScreen() {
 		frame = new JFrame();
@@ -53,18 +53,18 @@ public class SplashScreen {
 	}
 
 	/**
+	 * Closes splashScreen Frame
+	 */
+	public void closeFrame() {
+		frame.dispose();
+	}
+
+	/**
 	 * Displays splashScreen
 	 */
 	public void display() {
 		frame.add(splash);
 		frame.paintAll(g);
-	}
-
-	/**
-	 * Closes splashScreen Frame
-	 */
-	public void closeFrame() {
-		frame.dispose();
 	}
 
 	/**

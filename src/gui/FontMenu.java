@@ -47,6 +47,7 @@ public class FontMenu {
 	public static int fontStyle = Font.PLAIN;
 	public static String fontType = "Serif";
 	public static Color incorrectColor = Color.RED;
+
 	/**
 	 * Sets the correctColor
 	 * 
@@ -56,6 +57,7 @@ public class FontMenu {
 	public static void setCorrectColor(Color correctColor) {
 		GUI.checker.getTextField().setCorrectColor(correctColor);
 	}
+
 	/**
 	 * Sets the incorrect color
 	 * 
@@ -65,6 +67,7 @@ public class FontMenu {
 	public static void setIncorrectColor(Color incorrectColor) {
 		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
 	}
+
 	private JPanel cards;
 	private SpellChecker checker;
 	private DefaultStyledDocument document;

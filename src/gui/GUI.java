@@ -13,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -72,9 +73,8 @@ public class GUI extends JFrame {
 		// Get the size of the screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-		// Declare the icon that is used for the window
-		ImageIcon icon = loadIcon("icon.png");
-		Image image = icon.getImage();
+		// Declare the icons that are used for the window
+		ArrayList<Image> icons = getAllIconsAsImages();
 
 		// Set the basics of the frame
 		setTitle("Dragyn TextEdit");
@@ -83,7 +83,7 @@ public class GUI extends JFrame {
 		setSize(screenSize.width / 2, screenSize.height / 2);
 		setVisible(true);
 		setLocationRelativeTo(null);
-		setIconImage(image);
+		setIconImages(icons);
 
 		// Declare new textField and spellChecker
 		textField = new TextField(correctColor, incorrectColor);
@@ -172,7 +172,16 @@ public class GUI extends JFrame {
 		menuItem.setAccelerator(keyStroke);
 		return menuItem;
 	}
-	
+
+	private ArrayList<Image> getAllIconsAsImages() {
+		ArrayList<Image> icons = new ArrayList<Image>();
+		icons.add(loadIcon("icon16.png").getImage());
+		icons.add(loadIcon("icon32.png").getImage());
+		icons.add(loadIcon("icon64.png").getImage());
+		icons.add(loadIcon("icon128.png").getImage());
+		return icons;
+	}
+
 	/**
 	 * Loads an icon
 	 * 
@@ -182,8 +191,7 @@ public class GUI extends JFrame {
 	 */
 	private ImageIcon loadIcon(String icon) {
 		try {
-			InputStream input = getClass()
-					.getResourceAsStream(icon);
+			InputStream input = getClass().getResourceAsStream(icon);
 			return new ImageIcon(ImageIO.read(input));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

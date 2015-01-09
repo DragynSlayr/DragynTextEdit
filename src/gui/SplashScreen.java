@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -36,15 +35,15 @@ public class SplashScreen {
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setSize(icon.getIconWidth(), icon.getIconHeight());
-		frame.setVisible(true);
+		frame.setUndecorated(true);
 		frame.setLocationRelativeTo(null);
 		frame.setAlwaysOnTop(true);
 		frame.setIconImage(icon.getImage());
-		frame.setBackground(Color.BLACK);
+		frame.setVisible(true);
 
 		// Create a new JLabel to display the image
 		splash = new JLabel();
-
+		
 		// Add the image to the JLabel
 		splash.setIcon(icon);
 

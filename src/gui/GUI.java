@@ -73,7 +73,7 @@ public class GUI extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		// Declare the icon that is used for the window
-		ImageIcon icon = loadIcon("icon.jpg");
+		ImageIcon icon = loadIcon("icon.png");
 		Image image = icon.getImage();
 
 		// Set the basics of the frame

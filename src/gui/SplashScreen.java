@@ -3,7 +3,6 @@ package gui;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -17,61 +16,101 @@ import javax.swing.WindowConstants;
 
 public class SplashScreen {
 
-	JFrame frame;
-	Graphics g;
-	JLabel splash;
-
-	public SplashScreen() {
-		frame = new JFrame();
-
+	public SplashScreen(long time) {
+		// Get the size of the screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		// Declare the icon that is used for the window
 		ImageIcon icon = loadIcon("splash.png");
+
+		// Resize icon
 		icon = resizeImageIcon(icon, screenSize.height / 2,
 				screenSize.width / 3, true);
 
-		// Set the basics of the frame
-		frame.setTitle("Made By Inderpreet Dhillon");
-		frame.setUndecorated(true);
-		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setResizable(false);
-		frame.setSize(icon.getIconWidth(), icon.getIconHeight());
-		frame.setLocationRelativeTo(null);
-		frame.setAlwaysOnTop(true);
-		frame.setIconImage(icon.getImage());
-		frame.setVisible(true);
+		// Create a new frame
+		JFrame frame = setupUI(
+				new Dimension(icon.getIconWidth(), icon.getIconHeight()), icon);
 
 		// Create a new JLabel to display the image
-		splash = new JLabel();
+		JLabel splash = makeTransparentIconLabel(icon);
 
-		// Set opacity of the splash label
-		splash.setOpaque(false);
+		// Display the splash
+		display(time, frame, splash);
+	}
 
-		// Set the background color of the label
-		splash.setBackground(new Color(0, 0, 0, 0));
+	/**
+	 * Creates a JLabel that is transparent
+	 * 
+	 * @param icon
+	 *            The icon to put on the label
+	 * @return Transparent JLabel
+	 */
+	private JLabel makeTransparentIconLabel(ImageIcon icon) {
+		JLabel label = new JLabel(icon);
+		label.setBackground(new Color(0, 0, 0, 0));
+		label.setOpaque(false);
+		return label;
+	}
 
-		// Add the image to the JLabel
-		splash.setIcon(icon);
-
-		// Get the graphics
-		g = frame.getGraphics();
+	/**
+	 * Sets the parameters of the JFrame
+	 * 
+	 * @param size
+	 *            The size of the label
+	 * @param icon
+	 *            The icon for the frame
+	 * @return A JFrame
+	 */
+	private JFrame setupUI(Dimension size, ImageIcon icon) {
+		JFrame frame = new JFrame("Made By Inderpreet Dhillon");
+		frame.setAlwaysOnTop(true);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		frame.setIconImage(icon.getImage());
+		frame.setResizable(false);
+		frame.setSize(size);
+		frame.setUndecorated(true);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		return frame;
 	}
 
 	/**
 	 * Closes splashScreen Frame
 	 */
-	public void closeFrame() {
+	private void closeFrame(JFrame frame) {
 		frame.dispose();
 	}
 
 	/**
-	 * Displays splashScreen
+	 * Displays splash screen
+	 * 
+	 * @param time
+	 *            Time to display screen
+	 * @param frame
+	 *            Frame to contain screen
+	 * @param splash
+	 *            Label with icon
 	 */
-	public void display() {
+	private void display(long time, JFrame frame, JLabel splash) {
 		frame.add(splash);
 		frame.setBackground(new Color(0, 0, 0, 0));
-		frame.paintAll(g);
+		frame.paintAll(frame.getGraphics());
+		pause(time);
+		closeFrame(frame);
+	}
+
+	/**
+	 * Pauses all operations for a time
+	 * 
+	 * @param time
+	 *            Time to pause
+	 */
+	private void pause(long time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	/**

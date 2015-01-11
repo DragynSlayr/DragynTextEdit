@@ -12,14 +12,7 @@ public class Main {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				SplashScreen screen = new SplashScreen();
-				screen.display();
-				try {
-					Thread.sleep(1500);
-				} catch (InterruptedException e) {
-					System.out.println(e.getMessage());
-				}
-				screen.closeFrame();
+				new SplashScreen(2000);
 				new GUI();
 			}
 		});

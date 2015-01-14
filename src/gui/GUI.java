@@ -44,7 +44,7 @@ import file.SettingsLoader;
 public class GUI extends JFrame {
 
 	public static SpellChecker checker;
-
+	private String text = "";
 	public static TextField textField;
 
 	/**
@@ -126,7 +126,8 @@ public class GUI extends JFrame {
 	 * checks if the user wants to save before exiting
 	 */
 	private void checkBeforeClosing() {
-		if (checker.getTextField().getDocument().getLength() > 0) {
+		if (checker.getTextField().getDocument().getLength() > 0
+				&& !text.equals(textField.getTextBox().getText())) {
 			int selection = JOptionPane.showConfirmDialog(panel,
 					"Save file before closing?", "Exit Confirmation",
 					JOptionPane.YES_NO_CANCEL_OPTION,
@@ -249,6 +250,7 @@ public class GUI extends JFrame {
 					JOptionPane.showMessageDialog(panel, "File has been saved",
 							"File Saved", JOptionPane.INFORMATION_MESSAGE);
 				}
+				text = textField.getTextBox().getText();
 			}
 		});
 

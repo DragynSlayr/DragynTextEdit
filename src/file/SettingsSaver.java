@@ -14,6 +14,7 @@ public class SettingsSaver {
 	public static final String INCORRECT_COLOR = "Incorrect Color";
 	public static final String SEPARATOR = " ";
 	private BufferedWriter writer;
+	private final String FILENAME = "DragynTextEdit.cfg";
 
 	public SettingsSaver() {
 		createWriter();
@@ -36,7 +37,7 @@ public class SettingsSaver {
 	private void createWriter() {
 		try {
 			writer = new BufferedWriter(
-					new FileWriter(new File("settings.cfg")));
+					new FileWriter(new File(FILENAME)));
 		} catch (Exception e) {
 			System.out.println("Could not create saver");
 		}

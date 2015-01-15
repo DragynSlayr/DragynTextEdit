@@ -14,6 +14,7 @@ public class SettingsLoader {
 	private int fontSize = 20, fontStyle = Font.PLAIN;
 	private String fontType = "Times New Roman";
 	private BufferedReader reader;
+	private final String FILENAME = "DragynTextEdit.cfg";
 
 	public SettingsLoader() {
 		createReader();
@@ -25,7 +26,7 @@ public class SettingsLoader {
 	private void createReader() {
 		try {
 			reader = new BufferedReader(
-					new FileReader(new File("settings.cfg")));
+					new FileReader(new File(FILENAME)));
 		} catch (Exception e) {
 			System.out.println("Could not create loader");
 		}

@@ -47,21 +47,6 @@ public class GUI extends JFrame {
 	private String text = "";
 	public static TextField textField;
 
-	/**
-	 * Creates a new JMenu
-	 *
-	 * @param name
-	 *            The name of the new menu
-	 * @param mnemonic
-	 *            The shortcut key
-	 * @return New JMenu
-	 */
-	private static JMenu createJMenu(String name, int mnemonic) {
-		JMenu menu = new JMenu(name);
-		menu.setMnemonic(mnemonic);
-		return menu;
-	}
-
 	private Color correctColor = Color.BLACK, incorrectColor = Color.RED;
 	private final FileOperations fileOps = new FileOperations();
 	private JPanel panel;
@@ -286,7 +271,7 @@ public class GUI extends JFrame {
 		fontMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new FontMenu("Font Options", getWidth(), getHeight());
+				new FontMenu("Font Options", getWidth(), getHeight(), textField.getFont());
 			}
 		});
 
@@ -384,4 +369,18 @@ public class GUI extends JFrame {
 				"Spell Check Complete", JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	/**
+	 * Creates a new JMenu
+	 *
+	 * @param name
+	 *            The name of the new menu
+	 * @param mnemonic
+	 *            The shortcut key
+	 * @return New JMenu
+	 */
+	private static JMenu createJMenu(String name, int mnemonic) {
+		JMenu menu = new JMenu(name);
+		menu.setMnemonic(mnemonic);
+		return menu;
+	}
 }

@@ -125,6 +125,13 @@ public class TextField {
 	}
 
 	/**
+	 * Gets the current font
+	 * @return The current font
+	 */
+	public Font getFont() {
+		return textBox.getFont();
+	}
+	/**
 	 * Sets the incorrect color
 	 * 
 	 * @param incorrectColor

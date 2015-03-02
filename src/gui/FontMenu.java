@@ -41,32 +41,11 @@ import file.SettingsSaver;
 public class FontMenu {
 
 	public static Color correctColor = Color.BLACK;
-
-	public static int fontSize = 20;
-
-	public static int fontStyle = Font.PLAIN;
-	public static String fontType = "Serif";
 	public static Color incorrectColor = Color.RED;
 
-	/**
-	 * Sets the correctColor
-	 * 
-	 * @param correctColor
-	 *            The correct color
-	 */
-	public static void setCorrectColor(Color correctColor) {
-		GUI.checker.getTextField().setCorrectColor(correctColor);
-	}
-
-	/**
-	 * Sets the incorrect color
-	 * 
-	 * @param incorrectColor
-	 *            The incorrect color
-	 */
-	public static void setIncorrectColor(Color incorrectColor) {
-		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
-	}
+	public static int fontSize;// = 20;
+	public static int fontStyle;// = Font.PLAIN;
+	public static String fontType;// = "Serif";
 
 	private JPanel cards;
 	private SpellChecker checker;
@@ -81,9 +60,18 @@ public class FontMenu {
 
 	private SettingsSaver settingsSaver;
 
-	public FontMenu(String name, int width, int height) {
+	private static boolean saveSettings;
+
+	public FontMenu(String name, int width, int height, Font currentFont) {
+		//Get the current font values
+		fontSize = currentFont.getSize();
+		fontStyle = currentFont.getStyle();
+		fontType = currentFont.getName();
+		
+		saveSettings = false;
+		
 		// Create a JFrame to hold the panel
-		JFrame frame = new JFrame(name);
+		final JFrame frame = new JFrame(name);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setSize(width, height);
 		frame.setLocationRelativeTo(null);
@@ -134,7 +122,7 @@ public class FontMenu {
 
 		// Create a container to house all components
 		Container panel = frame.getContentPane();
-		panel.setLayout(new GridLayout(3, 1));
+		panel.setLayout(new GridLayout(4, 1));
 
 		// Create a cell render to modify the horizontal alignment of some
 		// components
@@ -328,13 +316,51 @@ public class FontMenu {
 		// Add exampleField to panel
 		panel.add(exampleField);
 
+		// Create a panel to hold the save and discard button
+		JPanel savePanel = new JPanel(new GridLayout(1, 2));
+
+		// The button to save settings
+		JButton saveButton = new JButton("Save font settings");
+
+		// Adding a button listener that notifies the program to save the
+		// current settings
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveSettings = true;
+				frame.dispose();
+			}
+		});
+
+		// The button to discard settings
+		JButton discardButton = new JButton("Discard font settings");
+
+		// Adding a listener to just close the window
+		discardButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveSettings = false;
+				frame.dispose();
+			}
+		});
+
+		// Add the buttons to the save panel
+		savePanel.add(saveButton);
+		savePanel.add(discardButton);
+
+		// Add the save panel to the main panel
+		panel.add(savePanel);
+
 		// Add custom windowListener to frame
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(WindowEvent e) {
-				GUI.textField.setFont(new Font(fontType, fontStyle, fontSize));
-				setColors();
-				saveOptions();
+			public void windowClosed(WindowEvent e) {
+				if (saveSettings) {
+					GUI.textField.setFont(new Font(fontType, fontStyle,
+							fontSize));
+					setColors();
+					saveOptions();
+				}
 			}
 		});
 	}
@@ -430,4 +456,25 @@ public class FontMenu {
 	private void updateTextArea() {
 		checker.checkTextArea();
 	}
+
+	/**
+	 * Sets the correctColor
+	 * 
+	 * @param correctColor
+	 *            The correct color
+	 */
+	public static void setCorrectColor(Color correctColor) {
+		GUI.checker.getTextField().setCorrectColor(correctColor);
+	}
+
+	/**
+	 * Sets the incorrect color
+	 * 
+	 * @param incorrectColor
+	 *            The incorrect color
+	 */
+	public static void setIncorrectColor(Color incorrectColor) {
+		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
+	}
+
 }

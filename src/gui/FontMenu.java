@@ -43,9 +43,9 @@ public class FontMenu {
 	public static Color correctColor = Color.BLACK;
 	public static Color incorrectColor = Color.RED;
 
-	public static int fontSize;// = 20;
-	public static int fontStyle;// = Font.PLAIN;
-	public static String fontType;// = "Serif";
+	public static int fontSize;
+	public static int fontStyle;
+	public static String fontType;
 
 	private JPanel cards;
 	private SpellChecker checker;

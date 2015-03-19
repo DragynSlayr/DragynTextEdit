@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Word {
 
-	private final String input;
+	private String input;
 	private final String[] toRemove = { ".", ",", "\'", ";", ":", "/", "?",
 			"<", ">", "\"", "â€œ", "â€�", "â€˜", "â€™", "{", "}", "[", "]",
 			"|", "\\", "(", ")", "!", "@", "#", "$", "%", "^", "&", "*", "-",

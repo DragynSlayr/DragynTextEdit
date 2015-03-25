@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
@@ -21,7 +23,7 @@ public class SplashScreen {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		// Declare the icon that is used for the window
-		ImageIcon icon = loadIcon("splash.png");
+		ImageIcon icon = loadIcon("images/splash.png");
 
 		// Resize icon
 		icon = resizeImageIcon(icon, screenSize.height / 2,
@@ -72,7 +74,7 @@ public class SplashScreen {
 	 */
 	private ImageIcon loadIcon(String icon) {
 		try {
-			InputStream input = getClass().getResourceAsStream(icon);
+			InputStream input = new FileInputStream(new File(icon));
 			return new ImageIcon(ImageIO.read(input));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -159,12 +160,17 @@ public class GUI extends JFrame {
 		return menuItem;
 	}
 
+	/**
+	 * Gets all icons
+	 * 
+	 * @return the icons
+	 */
 	private ArrayList<Image> getAllIconsAsImages() {
 		ArrayList<Image> icons = new ArrayList<Image>();
-		icons.add(loadIcon("icon16.png").getImage());
-		icons.add(loadIcon("icon32.png").getImage());
-		icons.add(loadIcon("icon64.png").getImage());
-		icons.add(loadIcon("icon128.png").getImage());
+		icons.add(loadIcon("images/icon16.png").getImage());
+		icons.add(loadIcon("images/icon32.png").getImage());
+		icons.add(loadIcon("images/icon64.png").getImage());
+		icons.add(loadIcon("images/icon128.png").getImage());
 		return icons;
 	}
 
@@ -177,7 +183,7 @@ public class GUI extends JFrame {
 	 */
 	private ImageIcon loadIcon(String icon) {
 		try {
-			InputStream input = getClass().getResourceAsStream(icon);
+			InputStream input = new FileInputStream(new File(icon));
 			return new ImageIcon(ImageIO.read(input));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -271,7 +277,8 @@ public class GUI extends JFrame {
 		fontMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new FontMenu("Font Options", getWidth(), getHeight(), textField.getFont());
+				new FontMenu("Font Options", getWidth(), getHeight(), textField
+						.getFont());
 			}
 		});
 
@@ -341,6 +348,8 @@ public class GUI extends JFrame {
 
 		// Create the JScrollPane
 		JScrollPane scrollPane = new JScrollPane(textField.getTextBox());
+		// scrollPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
+		// scrollPane.getHorizontalScrollBar().setUI(new CustomScrollBarUI());
 		panel.add(scrollPane);
 
 		// Sets content

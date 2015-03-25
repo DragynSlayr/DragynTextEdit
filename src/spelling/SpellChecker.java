@@ -47,16 +47,16 @@ public class SpellChecker {
 					textField.getDocument().replace(
 							docLength - length,
 							textField.getTextBox().getCaretPosition()
-									- (docLength - length), word.getWord(),
-							textField.getSet());
+									- (docLength - length),
+							word.getWord() + " ", textField.getSet());
 				} else {
 					StyleConstants.setForeground(textField.getSet(),
 							textField.getIncorrectColor());
 					textField.getDocument().replace(
 							docLength - length,
 							textField.getTextBox().getCaretPosition()
-									- (docLength - length), word.getWord(),
-							textField.getSet());
+									- (docLength - length),
+							word.getWord() + " ", textField.getSet());
 				}
 			} catch (BadLocationException ble) {
 				System.out.println("Couldn't replace string");

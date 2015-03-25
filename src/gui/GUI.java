@@ -348,8 +348,6 @@ public class GUI extends JFrame {
 
 		// Create the JScrollPane
 		JScrollPane scrollPane = new JScrollPane(textField.getTextBox());
-		// scrollPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
-		// scrollPane.getHorizontalScrollBar().setUI(new CustomScrollBarUI());
 		panel.add(scrollPane);
 
 		// Sets content

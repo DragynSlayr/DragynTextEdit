@@ -76,6 +76,7 @@ public class SettingsLoader {
 							.split(SettingsSaver.SEPARATOR);
 					Color correctColor = getColor(correctRGB);
 					GUI.textField.setCorrectColor(correctColor);
+					GUI.correctColor = correctColor;
 					FontMenu.correctColor = correctColor;
 					break;
 				case SettingsSaver.INCORRECT_COLOR:
@@ -83,6 +84,7 @@ public class SettingsLoader {
 							.split(SettingsSaver.SEPARATOR);
 					Color incorrectColor = getColor(incorrectRGB);
 					GUI.textField.setIncorrectColor(incorrectColor);
+					GUI.incorrectColor = incorrectColor;
 					FontMenu.incorrectColor = incorrectColor;
 					break;
 				default:

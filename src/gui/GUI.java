@@ -48,7 +48,7 @@ public class GUI extends JFrame {
 	private String text = "";
 	public static TextField textField;
 
-	private Color correctColor = Color.BLACK, incorrectColor = Color.RED;
+	public static Color correctColor = Color.BLACK, incorrectColor = Color.RED;
 	private final FileOperations fileOps = new FileOperations();
 	private JPanel panel;
 	private boolean savedOnce = false;

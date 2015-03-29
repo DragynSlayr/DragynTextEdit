@@ -82,6 +82,7 @@ public class GUI extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
+				case KeyEvent.VK_ENTER:
 				case KeyEvent.VK_SPACE:
 					checker.checkLastWord();
 					break;

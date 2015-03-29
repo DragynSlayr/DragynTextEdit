@@ -9,12 +9,7 @@ import java.util.ArrayList;
 public class Word {
 
 	private String input;
-	private final String[] toRemove = { ".", ",", "\'", ";", ":", "/", "?",
-			"<", ">", "\"", "â€œ", "â€�", "â€˜", "â€™", "{", "}", "[", "]",
-			"|", "\\", "(", ")", "!", "@", "#", "$", "%", "^", "&", "*", "-",
-			"+", "=", "_", "~", "`", "\n",
-			System.getProperty("line.separator"), " ", "", "	", "\r", "	",
-			"\\r", "\\t", "\\n" };
+	private String toRemove = "!\"# $%&'()*+,-./:;<=>?@[\\]^_`{}~|0123456789\t\n\r\f\b";
 
 	public Word(String term) {
 		input = term;
@@ -38,7 +33,11 @@ public class Word {
 	 */
 	public boolean isWord(ArrayList<String> dictionary) {
 		String fixed = removeSpecial();
-		return (dictionary.contains(fixed.toLowerCase()));
+		if (fixed.equals("")) {
+			return true;
+		} else {
+			return (dictionary.contains(fixed.toLowerCase()));
+		}
 	}
 
 	/**
@@ -49,8 +48,8 @@ public class Word {
 	private String removeSpecial() {
 		String fixed = input;
 		fixed = fixed.trim();
-		for (String s : toRemove) {
-			fixed = fixed.replace(s, "");
+		for(char c : toRemove.toCharArray()) {
+			fixed = fixed.replace(String.valueOf(c), "");
 		}
 		return fixed;
 	}

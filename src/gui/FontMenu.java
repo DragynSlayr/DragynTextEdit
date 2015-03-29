@@ -101,7 +101,7 @@ public class FontMenu {
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_SPACE:
-					checker.checkLastWord();
+					checker.checkLastWord(exampleField.getCaretPosition());
 					break;
 				}
 			}

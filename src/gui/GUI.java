@@ -84,7 +84,8 @@ public class GUI extends JFrame {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_ENTER:
 				case KeyEvent.VK_SPACE:
-					checker.checkLastWord();
+					checker.checkLastWord(textField.getTextBox()
+							.getCaretPosition());
 					break;
 				}
 			}

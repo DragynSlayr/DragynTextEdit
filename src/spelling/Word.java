@@ -48,7 +48,7 @@ public class Word {
 	private String removeSpecial() {
 		String fixed = input;
 		fixed = fixed.trim();
-		for(char c : toRemove.toCharArray()) {
+		for (char c : toRemove.toCharArray()) {
 			fixed = fixed.replace(String.valueOf(c), "");
 		}
 		return fixed;

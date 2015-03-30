@@ -113,7 +113,6 @@ public class GUI extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				checkBeforeClosing();
-				fileLoader.close();
 			}
 		});
 	}
@@ -271,10 +270,10 @@ public class GUI extends JFrame {
 					File toLoad = fileChooser.getSelectedFile();
 					fileLoader = new FileLoader(toLoad);
 					String loaded = fileLoader.readChunk(fileLoader
-							.getMinLength(95 * 19));
+							.getMinLength(getWidth() * 19));
 					textField.getTextBox().setText(loaded);
-					textField.getTextBox().setCaretPosition(0);
 					checker.checkTextArea();
+					textField.getTextBox().setCaretPosition(0);
 					loadedFile = true;
 				}
 			}
@@ -368,15 +367,16 @@ public class GUI extends JFrame {
 
 		verticalScrollBar.setUnitIncrement(10);
 		verticalScrollBar.setBlockIncrement(10);
-		
+
 		// Add listener to vertical scroll bar
 		verticalScrollBar.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
 				if (loadedFile) {
 					if (e.getSource() == verticalScrollBar
-							&& verticalScrollBar.getValue() + 465 >= verticalScrollBar
-									.getMaximum()) {
+							&& verticalScrollBar.getValue() >= Math
+									.abs(verticalScrollBar.getMaximum()
+											- getHeight())) {
 						try {
 							textField.getDocument().insertString(
 									textField.getDocument().getLength(),
@@ -414,6 +414,7 @@ public class GUI extends JFrame {
 	 */
 	private void showSpellCheckNotification() {
 		int errorsFound = checker.getErrorsFound();
+		textField.getTextBox().setCaretPosition(0);
 		String errorString = "Found " + checker.getErrorsFound() + " errors";
 		if (errorsFound == 1) {
 			errorString = "Found " + checker.getErrorsFound() + " error";

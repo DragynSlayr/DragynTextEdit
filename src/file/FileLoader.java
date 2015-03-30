@@ -75,17 +75,6 @@ public class FileLoader {
 	}
 
 	/**
-	 * Closes streams
-	 */
-	public void close() {
-		try {
-			inputStream.close();
-		} catch (IOException ioe) {
-			System.out.println(ioe.getMessage());
-		}
-	}
-
-	/**
 	 * Gets the number of bytes closest to the input
 	 * 
 	 * @param input

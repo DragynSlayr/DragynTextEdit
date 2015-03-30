@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -26,14 +28,17 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import javax.swing.text.BadLocationException;
 
 import spelling.SpellChecker;
+import file.FileLoader;
 import file.FileOperations;
 import file.SettingsLoader;
 
@@ -51,9 +56,11 @@ public class GUI extends JFrame {
 	public static Color correctColor = Color.BLACK, incorrectColor = Color.RED;
 	private final FileOperations fileOps = new FileOperations();
 	private JPanel panel;
-	private boolean savedOnce = false;
+	private boolean savedOnce = false, loadedFile = false;
 
 	private File toSave = null;
+
+	private FileLoader fileLoader;
 
 	public GUI() {
 		// Get the size of the screen
@@ -106,6 +113,7 @@ public class GUI extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				checkBeforeClosing();
+				fileLoader.close();
 			}
 		});
 	}
@@ -237,6 +245,7 @@ public class GUI extends JFrame {
 								"File has been saved", "File Saved",
 								JOptionPane.INFORMATION_MESSAGE);
 						savedOnce = true;
+						loadedFile = false;
 					}
 				} else {
 					fileOps.write(toSave, textField.getTextBox().getText());
@@ -259,13 +268,14 @@ public class GUI extends JFrame {
 				fileChooser.setDialogTitle("Load");
 				int userSelection = fileChooser.showOpenDialog(panel);
 				if (userSelection == JFileChooser.APPROVE_OPTION) {
-					for (int i = 0; i < 2; i++) {
-						File toLoad = fileChooser.getSelectedFile();
-						String loaded = fileOps.read(toLoad);
-						textField.getTextBox().setText(loaded);
-					}
+					File toLoad = fileChooser.getSelectedFile();
+					fileLoader = new FileLoader(toLoad);
+					String loaded = fileLoader.readChunk(fileLoader
+							.getMinLength(95 * 19));
+					textField.getTextBox().setText(loaded);
+					textField.getTextBox().setCaretPosition(0);
 					checker.checkTextArea();
-					showSpellCheckNotification();
+					loadedFile = true;
 				}
 			}
 		});
@@ -349,7 +359,41 @@ public class GUI extends JFrame {
 		panel.add(textField.getTextBox());
 
 		// Create the JScrollPane
-		JScrollPane scrollPane = new JScrollPane(textField.getTextBox());
+		JScrollPane scrollPane = new JScrollPane(textField.getTextBox(),
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		// Get the scroll bars from the scroll pane
+		final JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+
+		verticalScrollBar.setUnitIncrement(10);
+		verticalScrollBar.setBlockIncrement(10);
+		
+		// Add listener to vertical scroll bar
+		verticalScrollBar.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				if (loadedFile) {
+					if (e.getSource() == verticalScrollBar
+							&& verticalScrollBar.getValue() + 465 >= verticalScrollBar
+									.getMaximum()) {
+						try {
+							textField.getDocument().insertString(
+									textField.getDocument().getLength(),
+									fileLoader.readChunk(fileLoader
+											.getMinLength(96)),
+									textField.getSet());
+						} catch (BadLocationException ble) {
+							System.out.println(ble.getMessage());
+						}
+					}
+				}
+			}
+		});
+
+		verticalScrollBar.setValue(0);
+
+		// Add scroll pane to panel
 		panel.add(scrollPane);
 
 		// Sets content
@@ -371,7 +415,7 @@ public class GUI extends JFrame {
 	private void showSpellCheckNotification() {
 		int errorsFound = checker.getErrorsFound();
 		String errorString = "Found " + checker.getErrorsFound() + " errors";
-		if (errorsFound < 2 && errorsFound != 0) {
+		if (errorsFound == 1) {
 			errorString = "Found " + checker.getErrorsFound() + " error";
 		}
 		JOptionPane.showMessageDialog(panel, errorString,

@@ -47,22 +47,22 @@ public class FontMenu {
 	public static int fontStyle;
 	public static String fontType;
 
-	private JPanel cards;
-	private SpellChecker checker;
-	private DefaultStyledDocument document;
-	private JTextPane exampleField;
+	private JPanel cardsPanel;
+	private SpellChecker spellChecker;
+	private DefaultStyledDocument defualtDocument;
+	private JTextPane exampleTextPane;
 	private final String FONT_COLOR = "Font Colors";
 	private final String FONT_SIZE = "Font Size";
 	private final String FONT_STYLE = "Font Style";
 	private final String FONT_TYPE = "Font Type";
 
-	private Font selected;
+	private Font createdFont;
 
 	private SettingsSaver settingsSaver;
 
 	private static boolean saveSettings;
 
-	public FontMenu(String name, int width, int height, Font currentFont) {
+	public FontMenu(String frameTitle, int frameWidth, int frameHeight, Font currentFont) {
 		//Get the current font values
 		fontSize = currentFont.getSize();
 		fontStyle = currentFont.getStyle();
@@ -71,54 +71,54 @@ public class FontMenu {
 		saveSettings = false;
 		
 		// Create a JFrame to hold the panel
-		final JFrame frame = new JFrame(name);
+		final JFrame frame = new JFrame(frameTitle);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setSize(width, height);
+		frame.setSize(frameWidth, frameHeight);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
 		// Create a settingsSaver
 		settingsSaver = new SettingsSaver();
 
-		// Create a document
-		document = new DefaultStyledDocument();
+		// Create a defualtDocument
+		defualtDocument = new DefaultStyledDocument();
 
 		// Create an editable JTextField to show changes in font
-		exampleField = new JTextPane(document);
-		exampleField.setText("Example Tetx");
+		exampleTextPane = new JTextPane(defualtDocument);
+		exampleTextPane.setText("Example Tetx");
 
 		// Initialize spellChecker
-		checker = new SpellChecker(new TextField(correctColor, incorrectColor,
-				exampleField));
+		spellChecker = new SpellChecker(new TextField(correctColor, incorrectColor,
+				exampleTextPane));
 
-		checker.getTextField().setCorrectColor(correctColor);
-		checker.getTextField().setIncorrectColor(incorrectColor);
+		spellChecker.getTextField().setCorrectColor(correctColor);
+		spellChecker.getTextField().setIncorrectColor(incorrectColor);
 		updateTextArea();
 
 		// Add custom keyListener to JTextPane
-		exampleField.addKeyListener(new KeyAdapter() {
+		exampleTextPane.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_SPACE:
-					checker.checkLastWord(exampleField.getCaretPosition());
+					spellChecker.checkLastWord(exampleTextPane.getCaretPosition());
 					break;
 				}
 			}
 		});
 
-		// Set alignment of the exampleField
-		StyleConstants.setAlignment(checker.getTextField().getSet(),
+		// Set alignment of the exampleTextPane
+		StyleConstants.setAlignment(spellChecker.getTextField().getAttributeSet(),
 				StyleConstants.ALIGN_CENTER);
-		document.setParagraphAttributes(0, document.getLength(), checker
-				.getTextField().getSet(), false);
+		defualtDocument.setParagraphAttributes(0, defualtDocument.getLength(), spellChecker
+				.getTextField().getAttributeSet(), false);
 
-		selected = new Font(fontType, fontStyle, fontSize);
+		createdFont = new Font(fontType, fontStyle, fontSize);
 
 		setFont();
 
-		// Initialize cards JPanel, set layout to new CardLayout
-		cards = new JPanel(new CardLayout());
+		// Initialize cardsPanel JPanel, set layout to new CardLayout
+		cardsPanel = new JPanel(new CardLayout());
 
 		// Create a container to house all components
 		Container panel = frame.getContentPane();
@@ -146,19 +146,19 @@ public class FontMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String a = choices.getSelectedItem().toString();
-				CardLayout cardLayout = (CardLayout) cards.getLayout();
+				CardLayout cardLayout = (CardLayout) cardsPanel.getLayout();
 				switch (a) {
 				case FONT_TYPE:
-					cardLayout.show(cards, FONT_TYPE);
+					cardLayout.show(cardsPanel, FONT_TYPE);
 					break;
 				case FONT_SIZE:
-					cardLayout.show(cards, FONT_SIZE);
+					cardLayout.show(cardsPanel, FONT_SIZE);
 					break;
 				case FONT_STYLE:
-					cardLayout.show(cards, FONT_STYLE);
+					cardLayout.show(cardsPanel, FONT_STYLE);
 					break;
 				case FONT_COLOR:
-					cardLayout.show(cards, FONT_COLOR);
+					cardLayout.show(cardsPanel, FONT_COLOR);
 					break;
 				}
 			}
@@ -193,20 +193,20 @@ public class FontMenu {
 				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
 				fontType = sysFonts.getAvailableFonts()[comboBox
 						.getSelectedIndex()];
-				selected = new Font(fontType, fontStyle, fontSize);
+				createdFont = new Font(fontType, fontStyle, fontSize);
 				setFont();
 			}
 		});
 		// Add the combo box to the panel
 		typePanel.add(fontTypes);
 
-		// Add the typePanel to the cards panel with FONT_TYPE as a name
-		cards.add(typePanel, FONT_TYPE);
+		// Add the typePanel to the cardsPanel panel with FONT_TYPE as a name
+		cardsPanel.add(typePanel, FONT_TYPE);
 
 		// Create a size JPanel with GridLayout
 		JPanel sizePanel = new JPanel(new GridLayout(2, 1));
 
-		// Create a JLabel to show the selected font size
+		// Create a JLabel to show the createdFont font size
 		final JLabel sizeLabel = new JLabel("Font Size: " + fontSize);
 
 		// Set Horizontal alignment of the sizeLabel
@@ -219,7 +219,7 @@ public class FontMenu {
 				JSlider slider = (JSlider) e.getSource();
 				fontSize = slider.getValue();
 				sizeLabel.setText("Font Size: " + fontSize);
-				selected = new Font(fontType, fontStyle, fontSize);
+				createdFont = new Font(fontType, fontStyle, fontSize);
 				setFont();
 			}
 		};
@@ -232,8 +232,8 @@ public class FontMenu {
 		sizePanel.add(sizeLabel);
 		sizePanel.add(sizeSlider);
 
-		// Add sizePanel to cards panel with FONT_SIZE as name
-		cards.add(sizePanel, FONT_SIZE);
+		// Add sizePanel to cardsPanel panel with FONT_SIZE as name
+		cardsPanel.add(sizePanel, FONT_SIZE);
 
 		// Create a JPanel for a font styles with GridLayout
 		JPanel stylePanel = new JPanel(new GridLayout(1, 1));
@@ -245,7 +245,7 @@ public class FontMenu {
 		final int[] fontStylesInt = { Font.PLAIN, Font.BOLD, Font.ITALIC,
 				Font.BOLD + Font.ITALIC };
 
-		// Get the index of the selected style
+		// Get the index of the createdFont style
 		int fontStyleIndex = slowSearch(fontStyle, fontStylesInt);
 
 		// Create a JComboBox for fontStyles with fontItems
@@ -263,7 +263,7 @@ public class FontMenu {
 				@SuppressWarnings("unchecked")
 				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
 				fontStyle = fontStylesInt[comboBox.getSelectedIndex()];
-				selected = new Font(fontType, fontStyle, fontSize);
+				createdFont = new Font(fontType, fontStyle, fontSize);
 				setFont();
 			}
 		});
@@ -271,8 +271,8 @@ public class FontMenu {
 		// Add fontTypes to typePanel
 		stylePanel.add(fontStyles);
 
-		// Add typeJPanel to cards with
-		cards.add(stylePanel, FONT_STYLE);
+		// Add typeJPanel to cardsPanel with
+		cardsPanel.add(stylePanel, FONT_STYLE);
 
 		// Create color JPanel with GridLayout
 		final JPanel colorPanel = new JPanel(new GridLayout(1, 2));
@@ -284,7 +284,7 @@ public class FontMenu {
 				correctColor = JColorChooser.showDialog(colorPanel,
 						"Choose Correct Color", correctColor);
 				if (correctColor != null) {
-					checker.getTextField().setCorrectColor(correctColor);
+					spellChecker.getTextField().setCorrectColor(correctColor);
 					updateTextArea();
 				}
 			}
@@ -297,7 +297,7 @@ public class FontMenu {
 				incorrectColor = JColorChooser.showDialog(colorPanel,
 						"Choose Incorrect Color", incorrectColor);
 				if (incorrectColor != null) {
-					checker.getTextField().setIncorrectColor(incorrectColor);
+					spellChecker.getTextField().setIncorrectColor(incorrectColor);
 					updateTextArea();
 				}
 			}
@@ -307,14 +307,14 @@ public class FontMenu {
 		colorPanel.add(correctColorButton);
 		colorPanel.add(incorrectColorButton);
 
-		// Add color panel to cards as FONT_COLOR
-		cards.add(colorPanel, FONT_COLOR);
+		// Add color panel to cardsPanel as FONT_COLOR
+		cardsPanel.add(colorPanel, FONT_COLOR);
 
-		// Add cards to panel
-		panel.add(cards);
+		// Add cardsPanel to panel
+		panel.add(cardsPanel);
 
-		// Add exampleField to panel
-		panel.add(exampleField);
+		// Add exampleTextPane to panel
+		panel.add(exampleTextPane);
 
 		// Create a panel to hold the save and discard button
 		JPanel savePanel = new JPanel(new GridLayout(1, 2));
@@ -356,7 +356,7 @@ public class FontMenu {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				if (saveSettings) {
-					GUI.textField.setFont(new Font(fontType, fontStyle,
+					GUI.textField.setCurrentFont(new Font(fontType, fontStyle,
 							fontSize));
 					setColors();
 					saveOptions();
@@ -368,11 +368,11 @@ public class FontMenu {
 	/**
 	 * Creates a JSlider
 	 * 
-	 * @param min
+	 * @param minimumValue
 	 *            The minimum value
-	 * @param max
+	 * @param maximumValue
 	 *            The maximum value
-	 * @param value
+	 * @param currentValue
 	 *            The starting value
 	 * @param majorTickSpacing
 	 *            The space between big ticks
@@ -382,19 +382,19 @@ public class FontMenu {
 	 *            Whether or not to show ticks
 	 * @param paintLabels
 	 *            Whether or not to show labels
-	 * @param listener
+	 * @param changeListener
 	 *            A ChangeListener that controls the JSlider
-	 * @return A new JSlider with selected attributes
+	 * @return A new JSlider with createdFont attributes
 	 */
-	private JSlider createSlider(int min, int max, int value,
+	private JSlider createSlider(int minimumValue, int maximumValue, int currentValue,
 			int majorTickSpacing, int minorTickSpacing, boolean paintTicks,
-			boolean paintLabels, ChangeListener listener) {
-		JSlider slider = new JSlider(min, max, value);
+			boolean paintLabels, ChangeListener changeListener) {
+		JSlider slider = new JSlider(minimumValue, maximumValue, currentValue);
 		slider.setMajorTickSpacing(majorTickSpacing);
 		slider.setMinorTickSpacing(minorTickSpacing);
 		slider.setPaintTicks(paintTicks);
 		slider.setPaintLabels(paintLabels);
-		slider.addChangeListener(listener);
+		slider.addChangeListener(changeListener);
 		return slider;
 	}
 
@@ -402,13 +402,13 @@ public class FontMenu {
 	 * Saves important options to a file
 	 */
 	private void saveOptions() {
-		settingsSaver.format(SettingsSaver.FONT_TYPE, fontType, true);
-		settingsSaver.format(SettingsSaver.FONT_SIZE, fontSize, true);
-		settingsSaver.format(SettingsSaver.FONT_STYLE, fontStyle, true);
-		settingsSaver.format(SettingsSaver.CORRECT_COLOR, correctColor.getRed()
+		settingsSaver.formatOptions(SettingsSaver.FONT_TYPE, fontType, true);
+		settingsSaver.formatOptions(SettingsSaver.FONT_SIZE, fontSize, true);
+		settingsSaver.formatOptions(SettingsSaver.FONT_STYLE, fontStyle, true);
+		settingsSaver.formatOptions(SettingsSaver.CORRECT_COLOR, correctColor.getRed()
 				+ SettingsSaver.SEPARATOR + correctColor.getGreen()
 				+ SettingsSaver.SEPARATOR + correctColor.getBlue(), true);
-		settingsSaver.format(SettingsSaver.INCORRECT_COLOR,
+		settingsSaver.formatOptions(SettingsSaver.INCORRECT_COLOR,
 				incorrectColor.getRed() + SettingsSaver.SEPARATOR
 						+ incorrectColor.getGreen() + SettingsSaver.SEPARATOR
 						+ incorrectColor.getBlue(), false);
@@ -418,16 +418,16 @@ public class FontMenu {
 	 * Sets the colors to be used in the editor
 	 */
 	private void setColors() {
-		GUI.checker.getTextField().setCorrectColor(correctColor);
-		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
-		GUI.checker.checkTextArea();
+		GUI.spellChecker.getTextField().setCorrectColor(correctColor);
+		GUI.spellChecker.getTextField().setIncorrectColor(incorrectColor);
+		GUI.spellChecker.checkTextArea();
 	}
 
 	/**
-	 * Set the font of the exampleField
+	 * Set the font of the exampleTextPane
 	 */
 	private void setFont() {
-		exampleField.setFont(selected);
+		exampleTextPane.setFont(createdFont);
 	}
 
 	/**
@@ -451,10 +451,10 @@ public class FontMenu {
 	}
 
 	/**
-	 * Updates the components of the exampleField
+	 * Updates the components of the exampleTextPane
 	 */
 	private void updateTextArea() {
-		checker.checkTextArea();
+		spellChecker.checkTextArea();
 	}
 
 	/**
@@ -464,7 +464,7 @@ public class FontMenu {
 	 *            The correct color
 	 */
 	public static void setCorrectColor(Color correctColor) {
-		GUI.checker.getTextField().setCorrectColor(correctColor);
+		GUI.spellChecker.getTextField().setCorrectColor(correctColor);
 	}
 
 	/**
@@ -474,7 +474,7 @@ public class FontMenu {
 	 *            The incorrect color
 	 */
 	public static void setIncorrectColor(Color incorrectColor) {
-		GUI.checker.getTextField().setIncorrectColor(incorrectColor);
+		GUI.spellChecker.getTextField().setIncorrectColor(incorrectColor);
 	}
 
 }

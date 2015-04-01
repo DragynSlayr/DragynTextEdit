@@ -13,7 +13,7 @@ public class SettingsSaver {
 	public static final String FONT_TYPE = "Font Type";
 	public static final String INCORRECT_COLOR = "Incorrect Color";
 	public static final String SEPARATOR = " ";
-	private BufferedWriter writer;
+	private BufferedWriter bufferedWriter;
 	private final String FILENAME = "DragynTextEdit.cfg";
 
 	public SettingsSaver() {
@@ -21,11 +21,11 @@ public class SettingsSaver {
 	}
 
 	/**
-	 * Closes the writer
+	 * Closes the bufferedWriter
 	 */
-	public void close() {
+	public void closeWriter() {
 		try {
-			writer.close();
+			bufferedWriter.close();
 		} catch (Exception e) {
 			System.out.println("Could not close saver");
 		}
@@ -36,7 +36,7 @@ public class SettingsSaver {
 	 */
 	private void createWriter() {
 		try {
-			writer = new BufferedWriter(
+			bufferedWriter = new BufferedWriter(
 					new FileWriter(new File(FILENAME)));
 		} catch (Exception e) {
 			System.out.println("Could not create saver");
@@ -53,17 +53,17 @@ public class SettingsSaver {
 	 * @param newLine
 	 *            Whether to add a new line
 	 */
-	public void format(String name, Object value, boolean newLine) {
+	public void formatOptions(String name, Object value, boolean newLine) {
 		try {
-			writer.append(name + ASSIGNER + value);
+			bufferedWriter.append(name + ASSIGNER + value);
 			if (newLine) {
-				writer.newLine();
+				bufferedWriter.newLine();
 			}
 		} catch (Exception e) {
 			System.out.println("Could not save");
 		} finally {
 			try {
-				writer.flush();
+				bufferedWriter.flush();
 			} catch (Exception e) {
 				System.out.println("Could not flush");
 			}

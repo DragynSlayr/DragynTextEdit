@@ -9,7 +9,7 @@ import java.io.IOException;
 public class FileLoader {
 
 	private File file;
-	private FileInputStream inputStream;
+	private FileInputStream fileInputStream;
 
 	public FileLoader(File file) {
 		this.file = file;
@@ -21,7 +21,7 @@ public class FileLoader {
 	 */
 	private void openFileReader() {
 		try {
-			inputStream = new FileInputStream(file);
+			fileInputStream = new FileInputStream(file);
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}
@@ -37,7 +37,7 @@ public class FileLoader {
 	public String readChunk(int length) {
 		try {
 			byte[] bytes = new byte[length];
-			inputStream.read(bytes, 0, bytes.length);
+			fileInputStream.read(bytes, 0, bytes.length);
 			return new String(bytes);
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
@@ -81,7 +81,7 @@ public class FileLoader {
 	 *            The input bytes
 	 * @return The number of bytes
 	 */
-	public int getMinLength(int input) {
+	public int checkDesiredLength(int input) {
 		int count = 0;
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));

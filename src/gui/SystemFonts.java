@@ -7,12 +7,12 @@ import java.util.Arrays;
 
 public class SystemFonts {
 
-	private String[] fonts;
+	private String[] availableFonts;
 
 	public SystemFonts() {
-		fonts = getFonts();
-		fonts = cleanFonts(fonts);
-		Arrays.sort(fonts);
+		availableFonts = getSystemFonts();
+		availableFonts = cleanFonts(availableFonts);
+		Arrays.sort(availableFonts);
 	}
 
 	/**
@@ -33,20 +33,20 @@ public class SystemFonts {
 	}
 
 	/**
-	 * Gets fonts
+	 * Gets availableFonts
 	 * 
-	 * @return Allowed fonts
+	 * @return Allowed availableFonts
 	 */
 	public String[] getAvailableFonts() {
-		return fonts;
+		return availableFonts;
 	}
 
 	/**
-	 * Gets all fonts on the system
+	 * Gets all availableFonts on the system
 	 * 
 	 * @return Fonts on the system
 	 */
-	private String[] getFonts() {
+	private String[] getSystemFonts() {
 		Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
 				.getAllFonts();
 		ArrayList<String> fontFamilies = new ArrayList<String>();

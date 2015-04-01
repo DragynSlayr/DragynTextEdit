@@ -13,7 +13,7 @@ public class SettingsLoader {
 
 	private int fontSize = 20, fontStyle = Font.PLAIN;
 	private String fontType = "Times New Roman";
-	private BufferedReader reader;
+	private BufferedReader bufferedReader;
 	private final String FILENAME = "DragynTextEdit.cfg";
 
 	public SettingsLoader() {
@@ -25,7 +25,7 @@ public class SettingsLoader {
 	 */
 	private void createReader() {
 		try {
-			reader = new BufferedReader(
+			bufferedReader = new BufferedReader(
 					new FileReader(new File(FILENAME)));
 		} catch (Exception e) {
 			System.out.println("Could not create loader");
@@ -49,27 +49,27 @@ public class SettingsLoader {
 	/**
 	 * Gets information back from a file
 	 */
-	public void load() {
+	public void loadSettings() {
 		try {
 			String line;
-			while ((line = reader.readLine()) != null) {
+			while ((line = bufferedReader.readLine()) != null) {
 				String[] split = line.split(SettingsSaver.ASSIGNER);
 				String name = split[0];
 				switch (name) {
 				case SettingsSaver.FONT_TYPE:
 					fontType = split[1];
 					FontMenu.fontType = split[1];
-					setFont();
+					setRetrievedFont();
 					break;
 				case SettingsSaver.FONT_SIZE:
 					fontSize = Integer.parseInt(split[1]);
 					FontMenu.fontSize = Integer.parseInt(split[1]);
-					setFont();
+					setRetrievedFont();
 					break;
 				case SettingsSaver.FONT_STYLE:
 					fontStyle = Integer.parseInt(split[1]);
 					FontMenu.fontStyle = Integer.parseInt(split[1]);
-					setFont();
+					setRetrievedFont();
 					break;
 				case SettingsSaver.CORRECT_COLOR:
 					String[] correctRGB = split[1]
@@ -99,8 +99,8 @@ public class SettingsLoader {
 	/**
 	 * Sets a font from what was read from the setting configuration file
 	 */
-	private void setFont() {
+	private void setRetrievedFont() {
 		Font font = new Font(fontType, fontStyle, fontSize);
-		GUI.textField.setFont(font);
+		GUI.textField.setCurrentFont(font);
 	}
 }

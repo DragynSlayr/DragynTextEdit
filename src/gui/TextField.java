@@ -16,41 +16,41 @@ import javax.swing.text.SimpleAttributeSet;
 public class TextField {
 
 	private Color correctColor, incorrectColor;
-	private DefaultStyledDocument document;
-	private Font font;
-	private SimpleAttributeSet set;
-	public JTextPane textBox;
+	private DefaultStyledDocument defaultDocument;
+	private Font currentFont;
+	private SimpleAttributeSet attributeSet;
+	public JTextPane textPane;
 
 	public TextField(Color correctColor, Color incorrectColor) {
-		// Create a simple attribute set
-		set = new SimpleAttributeSet();
+		// Create a simple attribute attributeSet
+		attributeSet = new SimpleAttributeSet();
 
 		// Set colors
 		setCorrectColor(correctColor);
 		setIncorrectColor(incorrectColor);
 
-		// Create a font
-		font = new Font(Font.SERIF, Font.PLAIN, 20);
+		// Create a currentFont
+		currentFont = new Font(Font.SERIF, Font.PLAIN, 20);
 
-		// Create a document
-		document = new DefaultStyledDocument();
+		// Create a defaultDocument
+		defaultDocument = new DefaultStyledDocument();
 
 		// Create the JTextArea
-		textBox = new JTextPane(document);
-		textBox.setFont(font);
+		textPane = new JTextPane(defaultDocument);
+		textPane.setFont(currentFont);
 
 		// Set the starting color
-		textBox.setForeground(this.correctColor);
+		textPane.setForeground(this.correctColor);
 	}
 
 	public TextField(Color correctColor, Color incorrectColor, JTextPane pane) {
-		this.textBox = pane;
+		this.textPane = pane;
 
-		// Create a simple attribute set
-		set = new SimpleAttributeSet();
+		// Create a simple attribute attributeSet
+		attributeSet = new SimpleAttributeSet();
 
-		// Create a document
-		document = (DefaultStyledDocument) pane.getDocument();
+		// Create a defaultDocument
+		defaultDocument = (DefaultStyledDocument) pane.getDocument();
 
 		// Set colors
 		setCorrectColor(correctColor);
@@ -68,12 +68,12 @@ public class TextField {
 	}
 
 	/**
-	 * Gets the document
+	 * Gets the defaultDocument
 	 * 
 	 * @return A DefaultStyledDocument
 	 */
-	public DefaultStyledDocument getDocument() {
-		return document;
+	public DefaultStyledDocument getDefaultDocument() {
+		return defaultDocument;
 	}
 
 	/**
@@ -86,12 +86,12 @@ public class TextField {
 	}
 
 	/**
-	 * Gets the set
+	 * Gets the attributeSet
 	 * 
 	 * @return A SimpleAttributeSet
 	 */
-	public SimpleAttributeSet getSet() {
-		return set;
+	public SimpleAttributeSet getAttributeSet() {
+		return attributeSet;
 	}
 
 	/**
@@ -99,8 +99,8 @@ public class TextField {
 	 * 
 	 * @return A JTextPane
 	 */
-	public JTextPane getTextBox() {
-		return textBox;
+	public JTextPane getTextPane() {
+		return textPane;
 	}
 
 	/**
@@ -114,22 +114,22 @@ public class TextField {
 	}
 
 	/**
-	 * Sets the font used for the JTextPane
+	 * Sets the currentFont used for the JTextPane
 	 * 
-	 * @param f
-	 *            the desired font
+	 * @param desiredFont
+	 *            the desired currentFont
 	 */
-	public void setFont(Font f) {
-		font = f;
-		textBox.setFont(font);
+	public void setCurrentFont(Font desiredFont) {
+		currentFont = desiredFont;
+		textPane.setFont(currentFont);
 	}
 
 	/**
-	 * Gets the current font
-	 * @return The current font
+	 * Gets the current currentFont
+	 * @return The current currentFont
 	 */
-	public Font getFont() {
-		return textBox.getFont();
+	public Font getCurrentFont() {
+		return textPane.getFont();
 	}
 	/**
 	 * Sets the incorrect color
@@ -142,12 +142,12 @@ public class TextField {
 	}
 
 	/**
-	 * Sets the textBox's Key Listener
+	 * Sets the textPane's Key Listener
 	 * 
-	 * @param listener
-	 *            The KeyListener to be set
+	 * @param keyListener
+	 *            The KeyListener to be attributeSet
 	 */
-	public void setKeyListener(KeyListener listener) {
-		textBox.addKeyListener(listener);
+	public void setKeyListener(KeyListener keyListener) {
+		textPane.addKeyListener(keyListener);
 	}
 }

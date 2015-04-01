@@ -14,32 +14,32 @@ import java.io.IOException;
  */
 public class FileOperations {
 
-	private BufferedReader reader;
-	private BufferedWriter writer;
+	private BufferedReader bufferedReader;
+	private BufferedWriter bufferedWriter;
 
 	/**
-	 * Creates the reader object
+	 * Creates the bufferedReader object
 	 *
 	 * @param file
-	 *            The file for the reader
+	 *            The file for the bufferedReader
 	 */
 	private void createReader(File file) {
 		try {
-			reader = new BufferedReader(new FileReader(file));
+			bufferedReader = new BufferedReader(new FileReader(file));
 		} catch (FileNotFoundException ex) {
 			System.out.println("File not found");
 		}
 	}
 
 	/**
-	 * Creates the writer object
+	 * Creates the bufferedWriter object
 	 *
 	 * @param file
-	 *            The file for the writer
+	 *            The file for the bufferedWriter
 	 */
 	private void createWriter(File file) {
 		try {
-			writer = new BufferedWriter(new FileWriter(file));
+			bufferedWriter = new BufferedWriter(new FileWriter(file));
 		} catch (IOException ex) {
 			System.out.println("File not found");
 		}
@@ -52,19 +52,19 @@ public class FileOperations {
 	 *            The file to read from
 	 * @return The text from the file
 	 */
-	public String read(File file) {
+	public String getFileContents(File file) {
 		createReader(file);
 		String toReturn = "";
 		String line;
 		try {
-			while ((line = reader.readLine()) != null) {
+			while ((line = bufferedReader.readLine()) != null) {
 				toReturn += line;
 			}
 		} catch (IOException ex) {
 			System.out.println("Could not read from file");
 		} finally {
 			try {
-				reader.close();
+				bufferedReader.close();
 			} catch (IOException ex) {
 				System.out.println("Resource not closed");
 			}
@@ -80,15 +80,15 @@ public class FileOperations {
 	 * @param text
 	 *            The text to write
 	 */
-	public void write(File file, String text) {
+	public void writeData(File file, String text) {
 		createWriter(file);
 		try {
-			writer.write(text);
+			bufferedWriter.write(text);
 		} catch (IOException ex) {
 			System.out.println("Could not write text");
 		} finally {
 			try {
-				writer.close();
+				bufferedWriter.close();
 			} catch (IOException ex) {
 				System.out.println("Resource not closed");
 			}

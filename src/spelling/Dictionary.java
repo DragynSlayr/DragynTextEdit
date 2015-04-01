@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Dictionary {
 
 	private final ArrayList<String> dictionary;
-	private BufferedReader reader;
+	private BufferedReader bufferedReader;
 
 	public Dictionary() {
 		dictionary = new ArrayList<String>();
@@ -31,11 +31,11 @@ public class Dictionary {
 	}
 
 	/**
-	 * Initializes the reader variable
+	 * Initializes the bufferedReader variable
 	 */
 	private void initializeReader() {
-		InputStream input = getClass().getResourceAsStream("dict.txt");
-		reader = new BufferedReader(new InputStreamReader(input));
+		InputStream inputStream = getClass().getResourceAsStream("dict.txt");
+		bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class Dictionary {
 	private void readFromFile() {
 		String line;
 		try {
-			while ((line = reader.readLine()) != null) {
+			while ((line = bufferedReader.readLine()) != null) {
 				dictionary.add(line);
 			}
 		} catch (IOException ex) {

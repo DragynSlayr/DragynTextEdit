@@ -35,26 +35,26 @@ public class SpellChecker {
 	 */
 	public void checkLastWord(int cursor) {
 		try {
-			String[] split = textField.getTextBox().getText(0, cursor)
+			String[] split = textField.getTextPane().getText(0, cursor)
 					.split(" ");
 			Word word = new Word(split[split.length - 1]);
-			int docLength = textField.getTextBox().getCaretPosition() + 1;
+			int docLength = textField.getTextPane().getCaretPosition() + 1;
 			int length = split[split.length - 1].length() + 1;
-			StyleConstants.setForeground(textField.getSet(),
+			StyleConstants.setForeground(textField.getAttributeSet(),
 					textField.getCorrectColor());
 			String replacement = word.getWord();
 			if (word.isWord(dictionary)) {
-				StyleConstants.setForeground(textField.getSet(),
+				StyleConstants.setForeground(textField.getAttributeSet(),
 						textField.getCorrectColor());
 			} else {
-				StyleConstants.setForeground(textField.getSet(),
+				StyleConstants.setForeground(textField.getAttributeSet(),
 						textField.getIncorrectColor());
 			}
-			textField.getDocument().replace(
+			textField.getDefaultDocument().replace(
 					docLength - length,
-					textField.getTextBox().getCaretPosition()
+					textField.getTextPane().getCaretPosition()
 							- (docLength - length), replacement,
-					textField.getSet());
+					textField.getAttributeSet());
 		} catch (BadLocationException ble) {
 			System.out.println("Couldn't replace string");
 		}
@@ -66,12 +66,12 @@ public class SpellChecker {
 	public void checkTextArea() {
 		errorsFound = 0;
 		try {
-			String[] split = textField.getTextBox().getText().split(" ");
+			String[] split = textField.getTextPane().getText().split(" ");
 			ArrayList<Word> words = new ArrayList<Word>();
 			for (String s : split) {
 				words.add(new Word(s));
 			}
-			textField.getTextBox().setText("");
+			textField.getTextPane().setText("");
 			for (int i = 0; i < words.size(); i++) {
 				String add;
 				if (i == words.size() - 1) {
@@ -80,18 +80,18 @@ public class SpellChecker {
 					add = " ";
 				}
 				if (words.get(i).isWord(dictionary)) {
-					StyleConstants.setForeground(textField.getSet(),
+					StyleConstants.setForeground(textField.getAttributeSet(),
 							textField.getCorrectColor());
-					textField.getDocument().insertString(
-							textField.getDocument().getLength(),
-							words.get(i).getWord() + add, textField.getSet());
+					textField.getDefaultDocument().insertString(
+							textField.getDefaultDocument().getLength(),
+							words.get(i).getWord() + add, textField.getAttributeSet());
 				} else {
 					errorsFound++;
-					StyleConstants.setForeground(textField.getSet(),
+					StyleConstants.setForeground(textField.getAttributeSet(),
 							textField.getIncorrectColor());
-					textField.getDocument().insertString(
-							textField.getDocument().getLength(),
-							words.get(i).getWord() + add, textField.getSet());
+					textField.getDefaultDocument().insertString(
+							textField.getDefaultDocument().getLength(),
+							words.get(i).getWord() + add, textField.getAttributeSet());
 				}
 			}
 		} catch (BadLocationException ble) {

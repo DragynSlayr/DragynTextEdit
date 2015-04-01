@@ -49,13 +49,13 @@ import file.SettingsLoader;
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 
-	public static SpellChecker checker;
-	private String text = "";
+	public static SpellChecker spellChecker;
+	private String textFieldText = "";
 	public static TextField textField;
 
 	public static Color correctColor = Color.BLACK, incorrectColor = Color.RED;
-	private final FileOperations fileOps = new FileOperations();
-	private JPanel panel;
+	private final FileOperations fileOperator = new FileOperations();
+	private JPanel mainPanel;
 	private boolean savedOnce = false, loadedFile = false;
 
 	private File toSave = null;
@@ -81,8 +81,8 @@ public class GUI extends JFrame {
 		// Declare new textField and spellChecker
 		textField = new TextField(correctColor, incorrectColor);
 
-		// Initialize checker
-		checker = new SpellChecker(textField);
+		// Initialize spellChecker
+		spellChecker = new SpellChecker(textField);
 
 		// Set the keyListener of the textField
 		textField.setKeyListener(new KeyAdapter() {
@@ -91,7 +91,7 @@ public class GUI extends JFrame {
 				switch (e.getKeyCode()) {
 				case KeyEvent.VK_ENTER:
 				case KeyEvent.VK_SPACE:
-					checker.checkLastWord(textField.getTextBox()
+					spellChecker.checkLastWord(textField.getTextPane()
 							.getCaretPosition());
 					break;
 				}
@@ -103,7 +103,7 @@ public class GUI extends JFrame {
 
 		// Create a deserializer
 		SettingsLoader settingsLoader = new SettingsLoader();
-		settingsLoader.load();
+		settingsLoader.loadSettings();
 
 		// Update the components of the window
 		SwingUtilities.updateComponentTreeUI(this);
@@ -121,9 +121,9 @@ public class GUI extends JFrame {
 	 * checks if the user wants to save before exiting
 	 */
 	private void checkBeforeClosing() {
-		if (checker.getTextField().getDocument().getLength() > 0
-				&& !text.equals(textField.getTextBox().getText())) {
-			int selection = JOptionPane.showConfirmDialog(panel,
+		if (spellChecker.getTextField().getDefaultDocument().getLength() > 0
+				&& !textFieldText.equals(textField.getTextPane().getText())) {
+			int selection = JOptionPane.showConfirmDialog(mainPanel,
 					"Save file before closing?", "Exit Confirmation",
 					JOptionPane.YES_NO_CANCEL_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
@@ -132,10 +132,10 @@ public class GUI extends JFrame {
 				JFileChooser fileChooser = new JFileChooser(
 						System.getProperty("user.home") + "//Desktop");
 				fileChooser.setDialogTitle("Save");
-				int userSelection = fileChooser.showSaveDialog(panel);
+				int userSelection = fileChooser.showSaveDialog(mainPanel);
 				if (userSelection == JFileChooser.APPROVE_OPTION) {
 					toSave = fileChooser.getSelectedFile();
-					fileOps.write(toSave, textField.getTextBox().getText());
+					fileOperator.writeData(toSave, textField.getTextPane().getText());
 				}
 			case JOptionPane.NO_OPTION:
 				System.exit(0);
@@ -156,7 +156,7 @@ public class GUI extends JFrame {
 	 * @param mnemonic
 	 *            The shortcut key
 	 * @param tooltip
-	 *            The tool tip text
+	 *            The tool tip textFieldText
 	 * @param keyStroke
 	 *            The accelerated key combo
 	 * @return New JMenuItem
@@ -205,8 +205,8 @@ public class GUI extends JFrame {
 	 */
 	private void setupUI() {
 		// Create the JPanel
-		panel = new JPanel(new BorderLayout(), true);
-		add(panel);
+		mainPanel = new JPanel(new BorderLayout(), true);
+		add(mainPanel);
 
 		// Create a JMenuBar
 		JMenuBar menuBar = new JMenuBar();
@@ -227,7 +227,7 @@ public class GUI extends JFrame {
 
 		// Create a save JMenuItem
 		JMenuItem saveItem = createJMenuItem("Save", KeyEvent.VK_S,
-				"Save text to a file",
+				"Save textFieldText to a file",
 				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		saveItem.addActionListener(new ActionListener() {
 			@Override
@@ -236,28 +236,28 @@ public class GUI extends JFrame {
 					JFileChooser fileChooser = new JFileChooser(System
 							.getProperty("user.home") + "//Desktop");
 					fileChooser.setDialogTitle("Save");
-					int userSelection = fileChooser.showSaveDialog(panel);
+					int userSelection = fileChooser.showSaveDialog(mainPanel);
 					if (userSelection == JFileChooser.APPROVE_OPTION) {
 						toSave = fileChooser.getSelectedFile();
-						fileOps.write(toSave, textField.getTextBox().getText());
-						JOptionPane.showMessageDialog(panel,
+						fileOperator.writeData(toSave, textField.getTextPane().getText());
+						JOptionPane.showMessageDialog(mainPanel,
 								"File has been saved", "File Saved",
 								JOptionPane.INFORMATION_MESSAGE);
 						savedOnce = true;
 						loadedFile = false;
 					}
 				} else {
-					fileOps.write(toSave, textField.getTextBox().getText());
-					JOptionPane.showMessageDialog(panel, "File has been saved",
+					fileOperator.writeData(toSave, textField.getTextPane().getText());
+					JOptionPane.showMessageDialog(mainPanel, "File has been saved",
 							"File Saved", JOptionPane.INFORMATION_MESSAGE);
 				}
-				text = textField.getTextBox().getText();
+				textFieldText = textField.getTextPane().getText();
 			}
 		});
 
 		// Create a load JMenuItem
 		JMenuItem loadItem = createJMenuItem("Load", KeyEvent.VK_L,
-				"Load text from a file",
+				"Load textFieldText from a file",
 				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 		loadItem.addActionListener(new ActionListener() {
 			@Override
@@ -265,15 +265,15 @@ public class GUI extends JFrame {
 				JFileChooser fileChooser = new JFileChooser(System
 						.getProperty("user.home") + "//Desktop");
 				fileChooser.setDialogTitle("Load");
-				int userSelection = fileChooser.showOpenDialog(panel);
+				int userSelection = fileChooser.showOpenDialog(mainPanel);
 				if (userSelection == JFileChooser.APPROVE_OPTION) {
 					File toLoad = fileChooser.getSelectedFile();
 					fileLoader = new FileLoader(toLoad);
 					String loaded = fileLoader.readChunk(fileLoader
-							.getMinLength(getWidth() * 19));
-					textField.getTextBox().setText(loaded);
-					checker.checkTextArea();
-					textField.getTextBox().setCaretPosition(0);
+							.checkDesiredLength(getWidth() * 19));
+					textField.getTextPane().setText(loaded);
+					spellChecker.checkTextArea();
+					textField.getTextPane().setCaretPosition(0);
 					loadedFile = true;
 				}
 			}
@@ -289,7 +289,7 @@ public class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new FontMenu("Font Options", getWidth(), getHeight(), textField
-						.getFont());
+						.getCurrentFont());
 			}
 		});
 
@@ -300,7 +300,7 @@ public class GUI extends JFrame {
 		spellCheckItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				checker.checkTextArea();
+				spellChecker.checkTextArea();
 				showSpellCheckNotification();
 			}
 		});
@@ -316,7 +316,7 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane
 						.showMessageDialog(
-								panel,
+								mainPanel,
 								"Type as you would normally and the program will find and"
 										+ "\n"
 										+ " mark incorrectly spelled words upon pressing \"Space\"",
@@ -330,7 +330,7 @@ public class GUI extends JFrame {
 		aboutItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(panel,
+				JOptionPane.showMessageDialog(mainPanel,
 						"Made by Inderpreet Dhillon", "About",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -355,10 +355,10 @@ public class GUI extends JFrame {
 		setJMenuBar(menuBar);
 
 		// Add the JTextArea
-		panel.add(textField.getTextBox());
+		mainPanel.add(textField.getTextPane());
 
 		// Create the JScrollPane
-		JScrollPane scrollPane = new JScrollPane(textField.getTextBox(),
+		JScrollPane scrollPane = new JScrollPane(textField.getTextPane(),
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -378,11 +378,11 @@ public class GUI extends JFrame {
 									.abs(verticalScrollBar.getMaximum()
 											- getHeight())) {
 						try {
-							textField.getDocument().insertString(
-									textField.getDocument().getLength(),
+							textField.getDefaultDocument().insertString(
+									textField.getDefaultDocument().getLength(),
 									fileLoader.readChunk(fileLoader
-											.getMinLength(96)),
-									textField.getSet());
+											.checkDesiredLength(96)),
+									textField.getAttributeSet());
 						} catch (BadLocationException ble) {
 							System.out.println(ble.getMessage());
 						}
@@ -393,11 +393,11 @@ public class GUI extends JFrame {
 
 		verticalScrollBar.setValue(0);
 
-		// Add scroll pane to panel
-		panel.add(scrollPane);
+		// Add scroll pane to mainPanel
+		mainPanel.add(scrollPane);
 
 		// Sets content
-		setContentPane(panel);
+		setContentPane(mainPanel);
 
 		// Set the theme of the program
 		try {
@@ -413,13 +413,13 @@ public class GUI extends JFrame {
 	 * Displays a dialog with number of errors found
 	 */
 	private void showSpellCheckNotification() {
-		int errorsFound = checker.getErrorsFound();
-		textField.getTextBox().setCaretPosition(0);
-		String errorString = "Found " + checker.getErrorsFound() + " errors";
+		int errorsFound = spellChecker.getErrorsFound();
+		textField.getTextPane().setCaretPosition(0);
+		String errorString = "Found " + spellChecker.getErrorsFound() + " errors";
 		if (errorsFound == 1) {
-			errorString = "Found " + checker.getErrorsFound() + " error";
+			errorString = "Found " + spellChecker.getErrorsFound() + " error";
 		}
-		JOptionPane.showMessageDialog(panel, errorString,
+		JOptionPane.showMessageDialog(mainPanel, errorString,
 				"Spell Check Complete", JOptionPane.INFORMATION_MESSAGE);
 	}
 

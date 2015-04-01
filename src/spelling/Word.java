@@ -8,11 +8,11 @@ import java.util.ArrayList;
  */
 public class Word {
 
-	private String input;
-	private String toRemove = "!\"# $%&'()*+,-./:;<=>?@[\\]^_`{}~|0123456789\t\n\r\f\b";
+	private String inputString;
+	private String specialCharacters = "!\"# $%&'()*+,-./:;<=>?@[\\]^_`{}~|0123456789\t\n\r\f\b";
 
 	public Word(String term) {
-		input = term;
+		inputString = term;
 	}
 
 	/**
@@ -21,7 +21,7 @@ public class Word {
 	 * @return String word
 	 */
 	public String getWord() {
-		return input;
+		return inputString;
 	}
 
 	/**
@@ -46,9 +46,9 @@ public class Word {
 	 * @return String without any special characters
 	 */
 	private String removeSpecial() {
-		String fixed = input;
+		String fixed = inputString;
 		fixed = fixed.trim();
-		for (char c : toRemove.toCharArray()) {
+		for (char c : specialCharacters.toCharArray()) {
 			fixed = fixed.replace(String.valueOf(c), "");
 		}
 		return fixed;

@@ -50,7 +50,7 @@ import file.SettingsLoader;
 public class GUI extends JFrame {
 
 	public static SpellChecker spellChecker;
-	private String textFieldText = "";
+	private String lastSavedText = "";
 	public static TextField textField;
 
 	public static Color correctColor = Color.BLACK, incorrectColor = Color.RED;
@@ -122,7 +122,7 @@ public class GUI extends JFrame {
 	 */
 	private void checkBeforeClosing() {
 		if (spellChecker.getTextField().getDefaultDocument().getLength() > 0
-				&& !textFieldText.equals(textField.getTextPane().getText())) {
+				&& !lastSavedText.equals(textField.getTextPane().getText())) {
 			int selection = JOptionPane.showConfirmDialog(mainPanel,
 					"Save file before closing?", "Exit Confirmation",
 					JOptionPane.YES_NO_CANCEL_OPTION,
@@ -156,7 +156,7 @@ public class GUI extends JFrame {
 	 * @param mnemonic
 	 *            The shortcut key
 	 * @param tooltip
-	 *            The tool tip textFieldText
+	 *            The tool tip lastSavedText
 	 * @param keyStroke
 	 *            The accelerated key combo
 	 * @return New JMenuItem
@@ -227,7 +227,7 @@ public class GUI extends JFrame {
 
 		// Create a save JMenuItem
 		JMenuItem saveItem = createJMenuItem("Save", KeyEvent.VK_S,
-				"Save textFieldText to a file",
+				"Save lastSavedText to a file",
 				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		saveItem.addActionListener(new ActionListener() {
 			@Override
@@ -251,13 +251,13 @@ public class GUI extends JFrame {
 					JOptionPane.showMessageDialog(mainPanel, "File has been saved",
 							"File Saved", JOptionPane.INFORMATION_MESSAGE);
 				}
-				textFieldText = textField.getTextPane().getText();
+				lastSavedText = textField.getTextPane().getText();
 			}
 		});
 
 		// Create a load JMenuItem
 		JMenuItem loadItem = createJMenuItem("Load", KeyEvent.VK_L,
-				"Load textFieldText from a file",
+				"Load lastSavedText from a file",
 				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 		loadItem.addActionListener(new ActionListener() {
 			@Override

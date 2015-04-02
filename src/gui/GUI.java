@@ -35,11 +35,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 
 import spelling.SpellChecker;
 import file.FileLoader;
-import file.FileOperations;
+import file.FileSaver;
 import file.SettingsLoader;
 
 /**
@@ -54,7 +56,6 @@ public class GUI extends JFrame {
 	public static TextField textField;
 
 	public static Color correctColor = Color.BLACK, incorrectColor = Color.RED;
-	private final FileOperations fileOperator = new FileOperations();
 	private JPanel mainPanel;
 	private boolean savedOnce = false, loadedFile = false;
 
@@ -62,7 +63,11 @@ public class GUI extends JFrame {
 
 	private FileLoader fileLoader;
 
+	private int initialCursorPostion, endCursorPosition;
+
 	public GUI() {
+		resetCursorPositions();
+
 		// Get the size of the screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -85,15 +90,69 @@ public class GUI extends JFrame {
 		spellChecker = new SpellChecker(textField);
 
 		// Set the keyListener of the textField
-		textField.setKeyListener(new KeyAdapter() {
+		textField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
+				case KeyEvent.VK_TAB:
+				case KeyEvent.VK_CAPS_LOCK:
+				case KeyEvent.VK_SHIFT:
+				case KeyEvent.VK_CONTROL:
+				case KeyEvent.VK_ALT:
+				case KeyEvent.VK_NUM_LOCK:
+				case KeyEvent.VK_PAUSE:
+				case KeyEvent.VK_PRINTSCREEN:
+				case KeyEvent.VK_DELETE:
+				case KeyEvent.VK_HOME:
+				case KeyEvent.VK_PAGE_UP:
+				case KeyEvent.VK_PAGE_DOWN:
+				case KeyEvent.VK_END:
+				case KeyEvent.VK_UP:
+				case KeyEvent.VK_DOWN:
+				case KeyEvent.VK_LEFT:
+				case KeyEvent.VK_RIGHT:
+				case KeyEvent.VK_ESCAPE:
+				case KeyEvent.VK_SCROLL_LOCK:
+				case KeyEvent.VK_F1:
+				case KeyEvent.VK_F2:
+				case KeyEvent.VK_F3:
+				case KeyEvent.VK_F4:
+				case KeyEvent.VK_F5:
+				case KeyEvent.VK_F6:
+				case KeyEvent.VK_F7:
+				case KeyEvent.VK_F8:
+				case KeyEvent.VK_F9:
+				case KeyEvent.VK_F10:
+				case KeyEvent.VK_F11:
+				case KeyEvent.VK_F12:
+					break;
+				case KeyEvent.VK_BACK_SPACE:
+					endCursorPosition--;
+					break;
 				case KeyEvent.VK_ENTER:
 				case KeyEvent.VK_SPACE:
+					int temp1 = initialCursorPostion,
+					temp2 = endCursorPosition;
 					spellChecker.checkLastWord(textField.getTextPane()
 							.getCaretPosition());
+					initialCursorPostion = temp1;
+					endCursorPosition = temp2;
+				default:
 					break;
+				}
+			}
+		});
+
+		// Set the caretListener of the textField
+		textField.addCaretListener(new CaretListener() {
+			@Override
+			public void caretUpdate(CaretEvent e) {
+				int dot = e.getDot();
+				if (dot < initialCursorPostion) {
+					initialCursorPostion = dot;
+				}
+				if (dot > endCursorPosition) {
+					endCursorPosition = dot;
 				}
 			}
 		});
@@ -118,6 +177,35 @@ public class GUI extends JFrame {
 	}
 
 	/**
+	 * Saves a file
+	 * 
+	 * @param showDialog
+	 *            Whether to show a confirmation or not
+	 */
+	private void saveFile(boolean showDialog) {
+		FileSaver fileSaver = new FileSaver(toSave);
+
+		String textFieldText = textField.getTextPane().getText();
+
+		String toWrite = textFieldText.substring(initialCursorPostion,
+				endCursorPosition);
+
+		fileSaver.save(toWrite, initialCursorPostion);
+		if (showDialog) {
+			JOptionPane.showMessageDialog(mainPanel, "File has been saved",
+					"File Saved", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	/**
+	 * Sets the cursor tracking integers to their default values
+	 */
+	private void resetCursorPositions() {
+		initialCursorPostion = Integer.MAX_VALUE;
+		endCursorPosition = Integer.MIN_VALUE;
+	}
+
+	/**
 	 * checks if the user wants to save before exiting
 	 */
 	private void checkBeforeClosing() {
@@ -135,7 +223,7 @@ public class GUI extends JFrame {
 				int userSelection = fileChooser.showSaveDialog(mainPanel);
 				if (userSelection == JFileChooser.APPROVE_OPTION) {
 					toSave = fileChooser.getSelectedFile();
-					fileOperator.writeData(toSave, textField.getTextPane().getText());
+					saveFile(false);
 				}
 			case JOptionPane.NO_OPTION:
 				System.exit(0);
@@ -239,17 +327,12 @@ public class GUI extends JFrame {
 					int userSelection = fileChooser.showSaveDialog(mainPanel);
 					if (userSelection == JFileChooser.APPROVE_OPTION) {
 						toSave = fileChooser.getSelectedFile();
-						fileOperator.writeData(toSave, textField.getTextPane().getText());
-						JOptionPane.showMessageDialog(mainPanel,
-								"File has been saved", "File Saved",
-								JOptionPane.INFORMATION_MESSAGE);
+						saveFile(true);
 						savedOnce = true;
 						loadedFile = false;
 					}
 				} else {
-					fileOperator.writeData(toSave, textField.getTextPane().getText());
-					JOptionPane.showMessageDialog(mainPanel, "File has been saved",
-							"File Saved", JOptionPane.INFORMATION_MESSAGE);
+					saveFile(true);
 				}
 				lastSavedText = textField.getTextPane().getText();
 			}
@@ -275,6 +358,7 @@ public class GUI extends JFrame {
 					spellChecker.checkTextArea();
 					textField.getTextPane().setCaretPosition(0);
 					loadedFile = true;
+					resetCursorPositions();
 				}
 			}
 		});
@@ -415,7 +499,8 @@ public class GUI extends JFrame {
 	private void showSpellCheckNotification() {
 		int errorsFound = spellChecker.getErrorsFound();
 		textField.getTextPane().setCaretPosition(0);
-		String errorString = "Found " + spellChecker.getErrorsFound() + " errors";
+		String errorString = "Found " + spellChecker.getErrorsFound()
+				+ " errors";
 		if (errorsFound == 1) {
 			errorString = "Found " + spellChecker.getErrorsFound() + " error";
 		}

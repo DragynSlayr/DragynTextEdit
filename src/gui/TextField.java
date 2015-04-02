@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.KeyListener;
 
 import javax.swing.JTextPane;
+import javax.swing.event.CaretListener;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 
@@ -126,11 +127,13 @@ public class TextField {
 
 	/**
 	 * Gets the current currentFont
+	 * 
 	 * @return The current currentFont
 	 */
 	public Font getCurrentFont() {
 		return textPane.getFont();
 	}
+
 	/**
 	 * Sets the incorrect color
 	 * 
@@ -142,12 +145,22 @@ public class TextField {
 	}
 
 	/**
-	 * Sets the textPane's Key Listener
+	 * Add a Key Listener to the textPane
 	 * 
 	 * @param keyListener
-	 *            The KeyListener to be attributeSet
+	 *            The KeyListener to be added
 	 */
-	public void setKeyListener(KeyListener keyListener) {
+	public void addKeyListener(KeyListener keyListener) {
 		textPane.addKeyListener(keyListener);
+	}
+
+	/**
+	 * Add a Caret Listener to the textPane
+	 * 
+	 * @param caretListener
+	 *            The CaretListener to be added
+	 */
+	public void addCaretListener(CaretListener caretListener) {
+		textPane.addCaretListener(caretListener);
 	}
 }

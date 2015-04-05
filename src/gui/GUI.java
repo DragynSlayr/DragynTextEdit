@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyAdapter;
@@ -35,8 +34,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 
 import spelling.SpellChecker;
@@ -144,16 +141,13 @@ public class GUI extends JFrame {
 		});
 
 		// Set the caretListener of the textField
-		textField.addCaretListener(new CaretListener() {
-			@Override
-			public void caretUpdate(CaretEvent e) {
-				int dot = e.getDot();
-				if (dot < initialCursorPostion) {
-					initialCursorPostion = dot;
-				}
-				if (dot > endCursorPosition) {
-					endCursorPosition = dot;
-				}
+		textField.addCaretListener(event -> {
+			int dot = event.getDot();
+			if (dot < initialCursorPostion) {
+				initialCursorPostion = dot;
+			}
+			if (dot > endCursorPosition) {
+				endCursorPosition = dot;
 			}
 		});
 
@@ -237,27 +231,6 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Creates a new JMenuItem
-	 *
-	 * @param name
-	 *            The name of the item
-	 * @param mnemonic
-	 *            The shortcut key
-	 * @param tooltip
-	 *            The tool tip lastSavedText
-	 * @param keyStroke
-	 *            The accelerated key combo
-	 * @return New JMenuItem
-	 */
-	private JMenuItem createJMenuItem(String name, int mnemonic,
-			String tooltip, KeyStroke keyStroke) {
-		JMenuItem menuItem = new JMenuItem(name, mnemonic);
-		menuItem.setToolTipText(tooltip);
-		menuItem.setAccelerator(keyStroke);
-		return menuItem;
-	}
-
-	/**
 	 * Gets all icons
 	 * 
 	 * @return the icons
@@ -300,125 +273,111 @@ public class GUI extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 
 		// Create a file JMenu
-		JMenu fileMenu = createJMenu("File", KeyEvent.VK_F);
+		JMenu fileMenu = GUICreator.createJMenu("File", KeyEvent.VK_F);
 
 		// Create an exit JMenuItem
-		JMenuItem exitItem = createJMenuItem("Exit", KeyEvent.VK_E,
+		JMenuItem exitItem = GUICreator.createJMenuItem("Exit", KeyEvent.VK_E,
 				"Exit Application",
-				KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-		exitItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				checkBeforeClosing();
-			}
-		});
+				KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK),
+				event -> checkBeforeClosing());
 
 		// Create a save JMenuItem
-		JMenuItem saveItem = createJMenuItem("Save", KeyEvent.VK_S,
+		JMenuItem saveItem = GUICreator.createJMenuItem(
+				"Save",
+				KeyEvent.VK_S,
 				"Save lastSavedText to a file",
-				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-		saveItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!savedOnce) {
-					JFileChooser fileChooser = new JFileChooser(System
-							.getProperty("user.home") + "//Desktop");
-					fileChooser.setDialogTitle("Save");
-					int userSelection = fileChooser.showSaveDialog(mainPanel);
-					if (userSelection == JFileChooser.APPROVE_OPTION) {
-						toSave = fileChooser.getSelectedFile();
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK),
+				event -> {
+					if (!savedOnce) {
+						JFileChooser fileChooser = new JFileChooser(System
+								.getProperty("user.home") + "//Desktop");
+						fileChooser.setDialogTitle("Save");
+						int userSelection = fileChooser
+								.showSaveDialog(mainPanel);
+						if (userSelection == JFileChooser.APPROVE_OPTION) {
+							toSave = fileChooser.getSelectedFile();
+							saveFile(true);
+							savedOnce = true;
+							loadedFile = false;
+						}
+					} else {
 						saveFile(true);
-						savedOnce = true;
-						loadedFile = false;
 					}
-				} else {
-					saveFile(true);
-				}
-				lastSavedText = textField.getTextPane().getText();
-			}
-		});
+					lastSavedText = textField.getTextPane().getText();
+				});
 
 		// Create a load JMenuItem
-		JMenuItem loadItem = createJMenuItem("Load", KeyEvent.VK_L,
+		JMenuItem loadItem = GUICreator.createJMenuItem(
+				"Load",
+				KeyEvent.VK_L,
 				"Load lastSavedText from a file",
-				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
-		loadItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser(System
-						.getProperty("user.home") + "//Desktop");
-				fileChooser.setDialogTitle("Load");
-				int userSelection = fileChooser.showOpenDialog(mainPanel);
-				if (userSelection == JFileChooser.APPROVE_OPTION) {
-					File toLoad = fileChooser.getSelectedFile();
-					fileLoader = new FileLoader(toLoad);
-					String loaded = fileLoader.readChunk(fileLoader
-							.checkDesiredLength(getWidth() * 19));
-					textField.getTextPane().setText(loaded);
-					spellChecker.checkTextArea();
-					textField.getTextPane().setCaretPosition(0);
-					loadedFile = true;
-					resetCursorPositions();
-				}
-			}
-		});
+				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK),
+				event -> {
+					JFileChooser fileChooser = new JFileChooser(System
+							.getProperty("user.home") + "//Desktop");
+					fileChooser.setDialogTitle("Load");
+					int userSelection = fileChooser.showOpenDialog(mainPanel);
+					if (userSelection == JFileChooser.APPROVE_OPTION) {
+						File toLoad = fileChooser.getSelectedFile();
+						fileLoader = new FileLoader(toLoad);
+						String loaded = fileLoader.readChunk(fileLoader
+								.checkDesiredLength(getWidth() * 19));
+						textField.getTextPane().setText(loaded);
+						spellChecker.checkTextArea();
+						textField.getTextPane().setCaretPosition(0);
+						loadedFile = true;
+						resetCursorPositions();
+					}
+				});
 
 		// Create a edit JMenu
-		JMenu editMenu = createJMenu("Editing", KeyEvent.VK_E);
+		JMenu editMenu = GUICreator.createJMenu("Editing", KeyEvent.VK_E);
 
 		// Create a font JMenuItem
-		JMenuItem fontMenuItem = createJMenuItem("Font", KeyEvent.VK_F,
-				"Change font settings", null);
-		fontMenuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new FontMenu("Font Options", getWidth(), getHeight(), textField
-						.getCurrentFont());
-			}
-		});
+		JMenuItem fontMenuItem = GUICreator.createJMenuItem("Font",
+				KeyEvent.VK_F, "Change font settings", null, event -> {
+					new FontMenu("Font Options", getWidth(), getHeight(),
+							textField.getCurrentFont());
+				});
 
 		// Create a spell check JMenuItem
-		JMenuItem spellCheckItem = createJMenuItem("Check Spelling",
+		JMenuItem spellCheckItem = GUICreator.createJMenuItem("Check Spelling",
 				KeyEvent.VK_S, "Review Spelling",
-				KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-		spellCheckItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				spellChecker.checkTextArea();
-				showSpellCheckNotification();
-			}
-		});
+				KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK),
+				event -> {
+					spellChecker.checkTextArea();
+					showSpellCheckNotification();
+				});
 
 		// Create a help JMenu
-		JMenu helpMenu = createJMenu("Help", KeyEvent.VK_H);
+		JMenu helpMenu = GUICreator.createJMenu("Help", KeyEvent.VK_H);
 
 		// Create a help JMenuItem
-		JMenuItem helpItem = createJMenuItem("Help", KeyEvent.VK_L, "Help",
-				null);
-		helpItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane
-						.showMessageDialog(
-								mainPanel,
-								"Type as you would normally and the program will find and"
-										+ "\n"
-										+ " mark incorrectly spelled words upon pressing \"Space\"",
-								"Help Message", JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
+		JMenuItem helpItem = GUICreator
+				.createJMenuItem(
+						"Help",
+						KeyEvent.VK_L,
+						"Help",
+						null,
+						event -> {
+							JOptionPane
+									.showMessageDialog(
+											mainPanel,
+											"Type as you would normally and the program will find and"
+													+ "\n"
+													+ " mark incorrectly spelled words upon pressing \"Space\"",
+											"Help Message",
+											JOptionPane.INFORMATION_MESSAGE);
+
+						});
 
 		// Create an about JMenuItem
-		JMenuItem aboutItem = createJMenuItem("About", KeyEvent.VK_A, "About",
-				null);
-		aboutItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(mainPanel,
-						"Made by Inderpreet Dhillon", "About",
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
+		JMenuItem aboutItem = GUICreator.createJMenuItem("About",
+				KeyEvent.VK_A, "About", null, event -> {
+					JOptionPane.showMessageDialog(mainPanel,
+							"Made by Inderpreet Dhillon", "About",
+							JOptionPane.INFORMATION_MESSAGE);
+				});
 
 		// Add JMenuItems to JMenu
 		fileMenu.add(saveItem);
@@ -442,9 +401,8 @@ public class GUI extends JFrame {
 		mainPanel.add(textField.getTextPane());
 
 		// Create the JScrollPane
-		JScrollPane scrollPane = new JScrollPane(textField.getTextPane(),
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollPane = GUICreator.createJScrollPane(textField
+				.getTextPane());
 
 		// Get the scroll bars from the scroll pane
 		final JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
@@ -506,20 +464,5 @@ public class GUI extends JFrame {
 		}
 		JOptionPane.showMessageDialog(mainPanel, errorString,
 				"Spell Check Complete", JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	/**
-	 * Creates a new JMenu
-	 *
-	 * @param name
-	 *            The name of the new menu
-	 * @param mnemonic
-	 *            The shortcut key
-	 * @return New JMenu
-	 */
-	private static JMenu createJMenu(String name, int mnemonic) {
-		JMenu menu = new JMenu(name);
-		menu.setMnemonic(mnemonic);
-		return menu;
 	}
 }

@@ -1,5 +1,7 @@
 package gui;
 
+import images.ImageHandler;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,13 +15,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -69,7 +67,7 @@ public class GUI extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		// Declare the icons that are used for the window
-		ArrayList<Image> icons = getAllIconsAsImages();
+		ArrayList<Image> icons = ImageHandler.getAllIconsAsImages();
 
 		// Set the basics of the frame
 		setTitle("Dragyn TextEdit");
@@ -228,37 +226,6 @@ public class GUI extends JFrame {
 		} else {
 			System.exit(0);
 		}
-	}
-
-	/**
-	 * Gets all icons
-	 * 
-	 * @return the icons
-	 */
-	private ArrayList<Image> getAllIconsAsImages() {
-		ArrayList<Image> icons = new ArrayList<Image>();
-		icons.add(loadIcon("images/icon16.png").getImage());
-		icons.add(loadIcon("images/icon32.png").getImage());
-		icons.add(loadIcon("images/icon64.png").getImage());
-		icons.add(loadIcon("images/icon128.png").getImage());
-		return icons;
-	}
-
-	/**
-	 * Loads an icon
-	 * 
-	 * @param icon
-	 *            The path to the icon
-	 * @return The icon
-	 */
-	private ImageIcon loadIcon(String icon) {
-		try {
-			InputStream input = new FileInputStream(new File(icon));
-			return new ImageIcon(ImageIO.read(input));
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return null;
 	}
 
 	/**

@@ -1,16 +1,11 @@
 package gui;
 
-import java.awt.AlphaComposite;
+import images.ImageHandler;
+
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,10 +18,10 @@ public class SplashScreen {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		// Declare the icon that is used for the window
-		ImageIcon splashIcon = loadIcon("images/splash.png");
+		ImageIcon splashIcon = ImageHandler.loadIcon("splash.png");
 
 		// Resize icon
-		splashIcon = resizeImageIcon(splashIcon, screenSize.height / 2,
+		splashIcon = ImageHandler.resizeImageIcon(splashIcon, screenSize.height / 2,
 				screenSize.width / 3, true);
 
 		// Create a new frame
@@ -66,23 +61,6 @@ public class SplashScreen {
 	}
 
 	/**
-	 * Loads an icon
-	 * 
-	 * @param splashIcon
-	 *            The path to the icon
-	 * @return The icon
-	 */
-	private ImageIcon loadIcon(String splashIcon) {
-		try {
-			InputStream fileInputStream = new FileInputStream(new File(splashIcon));
-			return new ImageIcon(ImageIO.read(fileInputStream));
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return null;
-	}
-
-	/**
 	 * Creates a JLabel that is transparent
 	 * 
 	 * @param splashIcon
@@ -108,33 +86,6 @@ public class SplashScreen {
 		} catch (InterruptedException e) {
 			System.out.println(e.getMessage());
 		}
-	}
-
-	/**
-	 * Resizes an imageIcon
-	 * 
-	 * @param imageIcon
-	 *            The image icon to resize
-	 * @param newHeight
-	 *            The new height
-	 * @param newWidth
-	 *            The new width
-	 * @param hasAlpha
-	 *            Whether the icon has transparency
-	 * @return Resized icon
-	 */
-	private ImageIcon resizeImageIcon(ImageIcon imageIcon, int newHeight, int newWidth,
-			boolean hasAlpha) {
-		int imageType = hasAlpha ? BufferedImage.TYPE_INT_ARGB
-				: BufferedImage.TYPE_INT_RGB;
-		BufferedImage temp = new BufferedImage(newWidth, newHeight, imageType);
-		Graphics2D g = temp.createGraphics();
-		if (hasAlpha) {
-			g.setComposite(AlphaComposite.Src);
-		}
-		g.drawImage(imageIcon.getImage(), 0, 0, newWidth, newHeight, null);
-		g.dispose();
-		return new ImageIcon(temp);
 	}
 
 	/**

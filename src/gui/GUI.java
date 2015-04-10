@@ -28,9 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.text.BadLocationException;
 
@@ -155,9 +152,6 @@ public class GUI extends JFrame {
 		// Create a deserializer
 		SettingsLoader settingsLoader = new SettingsLoader();
 		settingsLoader.loadSettings();
-
-		// Update the components of the window
-		SwingUtilities.updateComponentTreeUI(this);
 
 		// Adds a custom window listener
 		addWindowListener(new WindowAdapter() {
@@ -407,15 +401,6 @@ public class GUI extends JFrame {
 
 		// Sets content
 		setContentPane(mainPanel);
-
-		// Set the theme of the program
-		try {
-			UIManager
-					.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			System.out.println("Could not apply theme");
-		}
 	}
 
 	/**

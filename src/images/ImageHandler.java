@@ -47,13 +47,19 @@ public class ImageHandler {
 			int newWidth, boolean hasAlpha) {
 		int imageType = hasAlpha ? BufferedImage.TYPE_INT_ARGB
 				: BufferedImage.TYPE_INT_RGB;
+		
 		BufferedImage temp = new BufferedImage(newWidth, newHeight, imageType);
+		
 		Graphics2D g = temp.createGraphics();
+		
 		if (hasAlpha) {
 			g.setComposite(AlphaComposite.Src);
 		}
+		
 		g.drawImage(imageIcon.getImage(), 0, 0, newWidth, newHeight, null);
+		
 		g.dispose();
+		
 		return new ImageIcon(temp);
 	}
 
